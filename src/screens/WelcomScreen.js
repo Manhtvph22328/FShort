@@ -6,7 +6,7 @@ const WelcomScreen = ({navigation}) => {
     useEffect(() => {
         const timer = setTimeout(() => {
           navigation.replace('OnBoard'); 
-        }, 3000);
+        }, 2000);
         return () => clearTimeout(timer); 
     }, [navigation]);
 
