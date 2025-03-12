@@ -1,13 +1,9 @@
-// App.js
 import React from 'react';
 import MainNavigator from './src/navigation/MainNavigator';
+import TabNavigator from './navigation/TabNavigator';
 
 const App = () => {
-  return (
-  
-        <MainNavigator />
- 
-  );
+  return <TabNavigator />;
 };
 
 export default App;
