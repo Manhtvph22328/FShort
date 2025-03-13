@@ -25,7 +25,7 @@ const HomeScreen = () => {
       title: 'Áo Hoodie Xám',
       price: '320.000₫',
       rating: 4.0,
-      image: require('../assets/Sp1.jpg'),
+      image: require('../assets/Sp2.jpg'),
       description: 'Thoải mái, phong cách.',
     },
     {
@@ -33,7 +33,7 @@ const HomeScreen = () => {
       title: 'Áo Hoodie Đen',
       price: '290.000₫',
       rating: 4.2,
-      image: require('../assets/Sp1.jpg'),
+      image: require('../assets/Sp3.jpg'),
       description: 'Mềm mại, giữ ấm tốt.',
     },
     {
@@ -41,7 +41,7 @@ const HomeScreen = () => {
       title: 'Áo Hoodie Trắng',
       price: '350.000₫',
       rating: 4.6,
-      image: require('../assets/Sp1.jpg'),
+      image: require('../assets/Sp2.jpg'),
       description: 'Đẹp và phong cách.',
     },
   ];
@@ -132,7 +132,7 @@ const HomeScreen = () => {
       {/* Danh sách sản phẩm */}
       <View style={styles.productHeader}>
         <Text style={styles.productText}>Danh sách sản phẩm</Text>
-        <TouchableOpacity onPress={{}}>
+        <TouchableOpacity >
           <Text style={styles.viewAllText}>Xem tất cả</Text>
         </TouchableOpacity>
       </View>
