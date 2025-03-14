@@ -7,9 +7,11 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState('Gợi ý cho bạn');
+  const navigation = useNavigation(); 
 
   const products = [
     {
@@ -19,6 +21,10 @@ const HomeScreen = () => {
       rating: 3.5,
       image: require('../assets/Sp1.jpg'),
       description: 'Chất liệu vải dày dặn.',
+      description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
+      description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
+      description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
+      description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
     },
     {
       id: 2,
@@ -27,6 +33,10 @@ const HomeScreen = () => {
       rating: 4.0,
       image: require('../assets/Sp2.jpg'),
       description: 'Thoải mái, phong cách.',
+      description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
+      description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
+      description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
+      description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
     },
     {
       id: 3,
@@ -35,6 +45,10 @@ const HomeScreen = () => {
       rating: 4.2,
       image: require('../assets/Sp3.jpg'),
       description: 'Mềm mại, giữ ấm tốt.',
+      description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
+      description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
+      description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
+      description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
     },
     {
       id: 4,
@@ -43,6 +57,10 @@ const HomeScreen = () => {
       rating: 4.6,
       image: require('../assets/Sp2.jpg'),
       description: 'Đẹp và phong cách.',
+      description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
+      description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
+      description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
+      description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
     },
   ];
 
@@ -107,12 +125,15 @@ const HomeScreen = () => {
       {/* Danh sách sản phẩm theo danh mục */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardContainer}>
         {getFilteredProducts().map((product) => (
-          <TouchableOpacity key={product.id}>
+          <TouchableOpacity 
+            key={product.id}
+            onPress={() => navigation.navigate('ShirtDetail', { product })}
+          >
             <View style={styles.card}>
               <View style={styles.imageContainer}>
                 <Image source={product.image} style={styles.cardImage} />
                 <View style={styles.cardDetails}>
-                  <TouchableOpacity style={styles.wishlistButton}>
+                <TouchableOpacity style={styles.wishlistButton}>
                     <Image
                       source={require('../assets/favorite.png')}
                       style={styles.cardWishlistIcon}
@@ -140,7 +161,8 @@ const HomeScreen = () => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}
         style={styles.cardContainer2}>
         {products.map((product) => (
-          <TouchableOpacity key={product.id}>
+          <TouchableOpacity key={product.id}
+          onPress={() => navigation.navigate('ShirtDetail', { product })}>
             <View style={styles.card}>
               <View style={styles.imageContainer}>
                 <Image source={product.image} style={styles.cardImage} />

@@ -48,11 +48,11 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Search"
-        component={SearchScreen} // Fix typo
+        component={SearchScreen} 
         options={{ title: 'Tìm kiếm' }}
       />
       <Tab.Screen
-        name="Car" // Fix name để khớp với logic getIcon
+        name="Car"
         component={MyCarScreen}
         options={{ title: 'Gio Hang' }}
       />
