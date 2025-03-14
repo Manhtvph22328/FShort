@@ -4,17 +4,11 @@ import {
   TouchableOpacity,
   View,
   Image,
-  Modal,
-  TouchableWithoutFeedback,
-  TextInput,
 } from 'react-native';
 import React, { useState } from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 const ProfileScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false);
-  const [changeAvatarModalVisible, setChangeAvatarModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
