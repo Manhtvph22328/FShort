@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { useCart } from '../context/CartContext';
 
 const CartScreen = () => {
   const [cartItems, setCartItems] = useState([
@@ -9,6 +10,7 @@ const CartScreen = () => {
     { id: '4', name: 'Áo Hoodie', size: '42', color: 'Black', price: 300000, quantity: 1, checked: false, image: require('../assets/Sp2.jpg') },
     { id: '5', name: 'Áo Hoodie', size: '42', color: 'Black', price: 300000, quantity: 1, checked: false, image: require('../assets/Sp1.jpg') },
   ]);
+  
 
   const [selectAll, setSelectAll] = useState(false);
 

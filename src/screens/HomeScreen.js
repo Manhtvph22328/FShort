@@ -19,6 +19,7 @@ const HomeScreen = () => {
       title: 'Áo Hoodie',
       price: '300.000₫',
       rating: 3.5,
+      quantity: 99,
       image: require('../assets/Sp1.jpg'),
       description: 'Chất liệu vải dày dặn.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
@@ -31,6 +32,7 @@ const HomeScreen = () => {
       title: 'Áo Hoodie Xám',
       price: '320.000₫',
       rating: 4.0,
+      quantity: 99,
       image: require('../assets/Sp2.jpg'),
       description: 'Thoải mái, phong cách.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
@@ -43,6 +45,7 @@ const HomeScreen = () => {
       title: 'Áo Hoodie Đen',
       price: '290.000₫',
       rating: 4.2,
+      quantity: 99,
       image: require('../assets/Sp3.jpg'),
       description: 'Mềm mại, giữ ấm tốt.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
@@ -55,6 +58,7 @@ const HomeScreen = () => {
       title: 'Áo Hoodie Trắng',
       price: '350.000₫',
       rating: 4.6,
+      quantity: 99,
       image: require('../assets/Sp2.jpg'),
       description: 'Đẹp và phong cách.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
@@ -92,7 +96,7 @@ const HomeScreen = () => {
               style={styles.icon}
             />
           </TouchableOpacity>
-        <TouchableOpacity onPress={{}}>
+        <TouchableOpacity onPress={() => navigation.navigate('Favorite')}>
             <Image
               source={require('../assets/favoriteOn.png')}
               style={styles.icon}
@@ -153,7 +157,7 @@ const HomeScreen = () => {
       {/* Danh sách sản phẩm */}
       <View style={styles.productHeader}>
         <Text style={styles.productText}>Danh sách sản phẩm</Text>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={() => navigation.navigate('AllSp')} >
           <Text style={styles.viewAllText}>Xem tất cả</Text>
         </TouchableOpacity>
       </View>
