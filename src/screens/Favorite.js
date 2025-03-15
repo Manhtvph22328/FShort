@@ -73,7 +73,7 @@ const Favorite = () => {
                     <Text style={styles.headerText}>Danh sách yêu thích</Text>
                 </View>
             </View>
-            <Text style={styles.header}></Text>
+            
             <ScrollView showsVerticalScrollIndicator={false}>
                 {productsfavo.map((product) => (
                     <TouchableOpacity
