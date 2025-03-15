@@ -188,7 +188,7 @@ const ProductDetailScreen = () => {
                   <TouchableOpacity style={styles.cartButtonmodal} >
                     <Text style={styles.buttonText2}>Thêm vào giỏ hàng</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.buyButtonmodal} onPress={() => setModalVisible(false)}>
+                  <TouchableOpacity style={styles.buyButtonmodal} onPress={() => navigation.navigate('Order')}>
                     <Text style={styles.buttonText3}>Mua ngay</Text>
                   </TouchableOpacity>
                 </View>
