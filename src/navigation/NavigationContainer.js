@@ -13,6 +13,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import MyCarScreen from '../screens/MyCarScreen';
 import ShirtDetail from '../screens/ShirtDetailScreen';
 import InputSearchModal from '../screens/InputSearch';
+import AllProduct from '../screens/AllProduct';
+import Favorite from '../screens/Favorite';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +31,8 @@ const AuthStackScreen = () => (
     <Stack.Screen name="ShirtDetail" component={ShirtDetail} options={{ headerShown: false }} />
     <Stack.Screen name="InputSearch" component={InputSearchModal} options={{ headerShown: false }} />
     <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="AllSp" component={AllProduct} options={{ headerShown: false }} />
+    <Stack.Screen name="Favorite" component={Favorite} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
