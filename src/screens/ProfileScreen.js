@@ -3,12 +3,22 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Modal,
   Image,
 } from 'react-native';
 import React, { useState } from 'react';
 
 const ProfileScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleLogout = () => {
+    setModalVisible(false);
+    console.log("User logged out!");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -17,7 +27,7 @@ const ProfileScreen = ({ navigation }) => {
         <Image source={require('../assets/Logo.png')} style={styles.appLogo} />
         <Text style={styles.headerText}>Cá nhân</Text>
         <TouchableOpacity>
-        <Image source={require('../assets/more.png')} style={styles.icon} />
+          <Image source={require('../assets/more.png')} style={styles.icon} />
         </TouchableOpacity>
       </View>
 
@@ -41,26 +51,49 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.card}>
         <View style={styles.functionContainer}>
           <TouchableOpacity style={styles.functionButton} onPress={() => navigation.navigate('EditProfile')}>
-          <Image source={require('../assets/profileedit.png')} style={styles.icon} />
+            <Image source={require('../assets/profileedit.png')} style={styles.icon} />
             <Text style={styles.functionText}>Chỉnh sửa thông tin cá nhân</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.functionButton} onPress={() => navigation.navigate('EditAdress')}>
-          <Image source={require('../assets/adress.png')} style={styles.icon} />
+            <Image source={require('../assets/adress.png')} style={styles.icon} />
             <Text style={styles.functionText}>Chỉnh sửa địa chỉ</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.functionButton} onPress={{}}>
-          <Image source={require('../assets/history.png')} style={styles.icon} />
+            <Image source={require('../assets/history.png')} style={styles.icon} />
             <Text style={styles.functionText}>Lịch sử mua hàng</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.functionButton} onPress={{}}>
-          <Image source={require('../assets/exit.png')} style={styles.icon} />
+          <TouchableOpacity style={styles.functionButton} onPress={() => setModalVisible(true)}>
+            <Image source={require('../assets/exit.png')} style={styles.icon} />
             <Text style={[styles.functionText, styles.logoutText]}>Đăng xuất</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Modal xác nhận đăng xuất */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Đăng xuất</Text>
+            <Text style={styles.modalMessage}>Bạn có chắc chắn muốn đăng xuất không?</Text>
+
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <Text style={styles.logoutText2}>Đăng xuất</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.cancelText}>Hủy</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 };
@@ -82,7 +115,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 2,
     borderColor: 'black',
-    borderRadius:10
+    borderRadius: 10
   },
   icon: {
     width: 22,
@@ -120,7 +153,7 @@ const styles = StyleSheet.create({
   },
   changeAvatarButton: {
     marginTop: -15,
-    right:-50
+    right: -50
   },
   changeAvatarText: {
     color: 'white',
@@ -153,10 +186,72 @@ const styles = StyleSheet.create({
   functionText: {
     marginLeft: 10,
     fontSize: 18,
+    fontWeight:'bold',
     color: '#000000',
   },
   logoutText: {
     color: 'red',
+    fontWeight:'bold',
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)"
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    width: "100%", height: "40%",
+    tSize: 18,
+    fontWeight: "bold",
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    alignItems: "center",
+    paddingBottom: 24,
+  },
+  modalTitle: {
+    fontSize: 30,
+    marginBottom: 20,
+    fontWeight:'bold',
+    textAlign: "center"
+  },
+  modalMessage: {
+    fontSize: 20,
+    marginBottom: 50,
+    fontWeight:'bold',
+    textAlign: "center"
+  },
+  logoutButton: {
+    backgroundColor: "black",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    width: "80%",
+    alignItems: "center",
+    marginBottom: 10
+  },
+  cancelButton: {
+    backgroundColor: "#E0E0E0",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    width: "80%",
+    alignItems: "center",
+    marginBottom: 10
+  },
+  cancelText: {
+    color: "black",
+    fontSize: 18,
+    fontWeight:'bold',
+  },
+  logoutText2: {
+    fontSize: 18,
+    color: '#ffffff',
+    fontWeight:'bold',
   },
 });
 

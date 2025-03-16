@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, Text, ScrollView, Image, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 const productsfavo = [
@@ -59,6 +59,26 @@ const productsfavo = [
 
 const Favorite = () => {
     const navigation = useNavigation();
+    const [favoriteProducts, setFavoriteProducts] = useState(productsfavo);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    // Hiển thị modal xác nhận
+    const handleShowModal = (product) => {
+        setSelectedProduct(product);
+        setModalVisible(true);
+    };
+
+    // Xoá sản phẩm khỏi danh sách
+    const handleRemoveFavorite = () => {
+        if (selectedProduct) {
+            const updatedFavorites = favoriteProducts.filter(
+                (item) => item.id !== selectedProduct.id
+            );
+            setFavoriteProducts(updatedFavorites);
+            setModalVisible(false);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -73,7 +93,7 @@ const Favorite = () => {
                     <Text style={styles.headerText}>Danh sách yêu thích</Text>
                 </View>
             </View>
-            
+
             <ScrollView showsVerticalScrollIndicator={false}>
                 {productsfavo.map((product) => (
                     <TouchableOpacity
@@ -88,15 +108,50 @@ const Favorite = () => {
                                 <View style={styles.ratingContainer}>
                                     <Text style={styles.rating}>⭐ {product.rating}</Text>
                                 </View>
-                                <Text style={styles.price}>{product.price}</Text>
+                                <Text style={styles.price}>{product.price} / cái</Text>
                             </View>
-                            <TouchableOpacity style={styles.heartIcon}>
+                            <TouchableOpacity style={styles.heartIcon}
+                                onPress={() => handleShowModal(product)}>
                                 <Image source={require('../assets/favoriteOn.png')} style={styles.icon} />
                             </TouchableOpacity>
                         </View>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
+
+            {/* Modal Xác Nhận Xoá */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles.modalTitle}>Bạn muốn xoá khỏi mục yêu thích?</Text>
+
+                        {selectedProduct && (
+                            <View style={styles.modalProduct}>
+                                <Image source={selectedProduct.image} style={styles.modalImage} />
+                                <View style={styles.modalInfo}>
+                                    <Text style={styles.modalProductName}>{selectedProduct.title}</Text>
+                                    <Text style={styles.modalProductPrice}>{selectedProduct.description}</Text>
+                                    <Text style={styles.modalProductPrice}>{selectedProduct.price}</Text>
+                                </View>
+                            </View>
+                        )}
+
+                        <TouchableOpacity style={styles.confirmButton} onPress={handleRemoveFavorite}>
+                            <Text style={styles.confirmText}>Đồng ý</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+                            <Text style={styles.cancelText}>Huỷ</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
         </View>
     );
 };
@@ -135,13 +190,117 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         position: 'relative',
     },
-    image: { width: 100, height: 100, borderRadius: 10 },
-    info: { flex: 1, marginLeft: 20 },
-    name: { fontSize: 18, fontWeight: 'bold' },
-    ratingContainer: { flexDirection: 'row', alignItems: 'center', marginVertical: 5 },
-    rating: { fontSize: 14 },
-    price: { fontSize: 16, fontWeight: 'bold', color: '#ff5733' },
-    heartIcon: { position: 'absolute', top: 10, right: 10 },
+    image: {
+        width: 100,
+        height: 100,
+        borderRadius: 10
+    },
+    info: {
+        flex: 1,
+        marginLeft: 20
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    ratingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 5
+    },
+    rating: {
+        fontSize: 14
+    },
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'black'
+    },
+    heartIcon: {
+        position: 'absolute',
+        top: 10, right: 10
+    },
+
+    // Modal
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        backgroundColor: "white",
+        width: "100%", height: "50%",
+        tSize: 18,
+        fontWeight: "bold",
+        backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingHorizontal: 16,
+        paddingTop: 16,
+        alignItems: "center",
+        paddingBottom: 24,
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginTop: 15,
+        textAlign: 'center'
+    },
+    modalProduct: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 25,
+        marginLeft:10,
+    },
+    modalImage: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+        marginRight: 10
+    },
+    modalInfo: {
+        flex: 1
+    },
+    modalProductName: {
+        fontSize: 20,
+        top: -5,
+        fontWeight: 'bold'
+    },
+    modalProductPrice: {
+        fontSize: 16,
+        marginTop:7,
+        color: 'gray'
+    },
+    confirmButton: {
+        backgroundColor: "black",
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        width: "80%",
+        alignItems: "center",
+        marginBottom: 15,
+        marginTop: 80
+    },
+    confirmText: {
+        color: "#ffffff",
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    cancelButton: {
+        backgroundColor: "#E0E0E0",
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        width: "80%",
+        alignItems: "center",
+        marginBottom: 10
+    },
+    cancelText: {
+        color: "black",
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 });
 
 export default Favorite;
