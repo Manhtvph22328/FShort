@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     line2: {
         backgroundColor: "black",
         width: 1, height: 20,
-        marginLeft: 10, marginRight: 50,
+        marginLeft: 30, marginRight: 50,
     },
     totalBold: {
         fontWeight: "bold",
