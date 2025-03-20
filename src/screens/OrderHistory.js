@@ -172,7 +172,7 @@ const OrderHistory = () => {
               )}
               {selectedTab === "Đã giao" && (
                 <View style={styles.buttonsContainer}>
-                  <TouchableOpacity style={styles.cancelButton}>
+                  <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate('Order')}>
                     <Text style={styles.cancelButtonText}>Mua lại</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.detailButton}>

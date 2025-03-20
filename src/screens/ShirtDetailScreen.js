@@ -87,7 +87,7 @@ const ProductDetailScreen = () => {
           <Text style={styles.sectionTitle}>Đánh giá</Text>
           <View style={styles.reviewRow}>
             <Text style={styles.rating}>⭐ 3.5</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Evaluate')}>
               <Text style={styles.viewAll}>Xem tất cả</Text>
             </TouchableOpacity>
           </View>
