@@ -117,9 +117,9 @@ export default function SearchScreen() {
               <Image source={item.image} style={styles.productImage} />
               <View style={styles.productInfo}>
                 <Text style={styles.productTitle}>{item.title}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
                 <Text style={styles.productDescription}>{item.description}</Text>
                 <Text style={styles.productRating}>⭐ {item.rating}</Text>
+                <Text style={styles.productPrice}>{item.price}</Text>
               </View>
             </View>
           )}
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: 14,
-    color: '#990000',
+    color: '#000000',
     fontWeight: 'bold',
     marginVertical: 5
   },
@@ -254,6 +254,7 @@ const styles = StyleSheet.create({
   },
   productRating: {
     fontSize: 12,
+    fontWeight: 'bold',
     color: '#FFA500',
     marginTop: 5
   },
