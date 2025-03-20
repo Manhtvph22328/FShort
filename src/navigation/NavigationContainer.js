@@ -19,6 +19,7 @@ import OrderScreen from '../screens/OrderScreen';
 import EditProfileScreen from '../screens/EditProfile';
 import EditdressScreen from '../screens/EditAdress';
 import OrderHistory from '../screens/OrderHistory';
+import Orderdetail from '../screens/Orderdetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ const AuthStackScreen = () => (
     <Stack.Screen name="OrderHistory" component={OrderHistory} options={{ headerShown: false }} />
     <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
     <Stack.Screen name="EditAdress" component={EditdressScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Orderdetail" component={Orderdetail} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
