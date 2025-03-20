@@ -18,6 +18,7 @@ import Favorite from '../screens/Favorite';
 import OrderScreen from '../screens/OrderScreen';
 import EditProfileScreen from '../screens/EditProfile';
 import EditdressScreen from '../screens/EditAdress';
+import OrderHistory from '../screens/OrderHistory';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,7 @@ const AuthStackScreen = () => (
     <Stack.Screen name="AllSp" component={AllProduct} options={{ headerShown: false }} />
     <Stack.Screen name="Favorite" component={Favorite} options={{ headerShown: false }} />
     <Stack.Screen name="Order" component={OrderScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="OrderHistory" component={OrderHistory} options={{ headerShown: false }} />
     <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
     <Stack.Screen name="EditAdress" component={EditdressScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
