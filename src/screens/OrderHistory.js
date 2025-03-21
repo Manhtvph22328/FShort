@@ -175,7 +175,7 @@ const OrderHistory = () => {
                   <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate('Order')}>
                     <Text style={styles.cancelButtonText}>Mua lại</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.detailButton}>
+                  <TouchableOpacity style={styles.detailButton} onPress={() => navigation.navigate('Evaluate')}>
                     <Text style={styles.detailButtonText}>Đánh giá</Text>
                   </TouchableOpacity>
                 </View>

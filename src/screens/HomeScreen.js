@@ -20,7 +20,11 @@ const HomeScreen = () => {
       price: '300.000₫',
       rating: 3.5,
       quantity: 99,
-      image: require('../assets/Sp1.jpg'),
+      images: [
+        "https://i.pinimg.com/736x/5f/99/68/5f9968867c3ffb32601b6f19fa59a6ec.jpg",
+        "https://i.pinimg.com/736x/f1/34/d5/f134d5d5aeeb2f507f5a6ec4e695c7a3.jpg",
+        "https://i.pinimg.com/736x/68/f7/ca/68f7ca5586272c6f094742fac4e7f15c.jpg",
+      ],
       description: 'Chất liệu vải dày dặn.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
       description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
@@ -33,7 +37,11 @@ const HomeScreen = () => {
       price: '320.000₫',
       rating: 4.0,
       quantity: 99,
-      image: require('../assets/Sp2.jpg'),
+      images: [
+        "https://i.pinimg.com/736x/5f/99/68/5f9968867c3ffb32601b6f19fa59a6ec.jpg",
+        "https://i.pinimg.com/736x/f1/34/d5/f134d5d5aeeb2f507f5a6ec4e695c7a3.jpg",
+        "https://i.pinimg.com/736x/68/f7/ca/68f7ca5586272c6f094742fac4e7f15c.jpg",
+      ],
       description: 'Thoải mái, phong cách.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
       description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
@@ -46,7 +54,11 @@ const HomeScreen = () => {
       price: '290.000₫',
       rating: 4.2,
       quantity: 99,
-      image: require('../assets/Sp3.jpg'),
+      images: [
+        "https://i.pinimg.com/736x/5f/99/68/5f9968867c3ffb32601b6f19fa59a6ec.jpg",
+        "https://i.pinimg.com/736x/f1/34/d5/f134d5d5aeeb2f507f5a6ec4e695c7a3.jpg",
+        "https://i.pinimg.com/736x/68/f7/ca/68f7ca5586272c6f094742fac4e7f15c.jpg",
+      ],
       description: 'Mềm mại, giữ ấm tốt.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
       description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
@@ -59,7 +71,11 @@ const HomeScreen = () => {
       price: '350.000₫',
       rating: 4.6,
       quantity: 99,
-      image: require('../assets/Sp2.jpg'),
+      images: [
+        "https://i.pinimg.com/736x/5f/99/68/5f9968867c3ffb32601b6f19fa59a6ec.jpg",
+        "https://i.pinimg.com/736x/f1/34/d5/f134d5d5aeeb2f507f5a6ec4e695c7a3.jpg",
+        "https://i.pinimg.com/736x/68/f7/ca/68f7ca5586272c6f094742fac4e7f15c.jpg",
+      ],
       description: 'Đẹp và phong cách.',
       description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
       description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
@@ -130,12 +146,13 @@ const HomeScreen = () => {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardContainer}>
         {getFilteredProducts().map((product) => (
           <TouchableOpacity 
-            key={product.id}
-            onPress={() => navigation.navigate('ShirtDetail', { product })}
-          >
+          key={product.id}
+          onPress={() => navigation.navigate('ShirtDetail', { product: { ...product, images: [...product.images] } })}
+        >
+        
             <View style={styles.card}>
               <View style={styles.imageContainer}>
-                <Image source={product.image} style={styles.cardImage} />
+                <Image source={{ uri: product.images[0] }} style={styles.cardImage} />
                 <View style={styles.cardDetails}>
                 <TouchableOpacity style={styles.wishlistButton}>
                     <Image
@@ -169,7 +186,7 @@ const HomeScreen = () => {
           onPress={() => navigation.navigate('ShirtDetail', { product })}>
             <View style={styles.card}>
               <View style={styles.imageContainer}>
-                <Image source={product.image} style={styles.cardImage} />
+              <Image source={{ uri: product.images[2] }} style={styles.cardImage} />
                 <View style={styles.cardDetails}>
                   <TouchableOpacity style={styles.wishlistButton}>
                     <Image
