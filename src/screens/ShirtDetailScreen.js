@@ -1,54 +1,42 @@
 import React, { useState } from 'react';
-import { View, Text, Image, Modal, TouchableOpacity, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { useCart } from '../context/CartContext';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  Image,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const ProductDetailScreen = () => {
-  const route = useRoute();
+const ShirtDetailScreen = ({ route }) => {
   const { product } = route.params;
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
 
-  
-  // const { addToCart } = useCart();
   const navigation = useNavigation();
-
-  
-  // const handleAddToCart = () => {
-  //   if (!selectedSize || !selectedColor) {
-  //     alert('Vui lòng chọn kích thước và màu sắc');
-  //     return;
-  //   }
-    
-  //   const item = {
-  //     id: product.id,
-  //     name: product.title,
-  //     size: selectedSize,
-  //     color: selectedColor,
-  //     price: product.price,
-  //     quantity: 1,
-  //     image: product.image,
-  //   };
-
-  //   addToCart(item);
-  //   setModalVisible(false);
-  //   navigation.navigate('CartScreen');
-  // };
 
   return (
     <View style={styles.container}>
+      {/* ScrollView để vuốt ảnh */}
       <ScrollView style={styles.scrollContainer}>
-        {/* Hiển thị ảnh sản phẩm */}
-        <View style={styles.header}>
-          <Image source={product.image} style={styles.productImage} />
-          <TouchableOpacity onPress={{}}>
-            <Image
-              source={require('../assets/favorite.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
+        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}
+          style={styles.imageContainer}>
+          {product.images.map((image, index) => (
+            <Image key={index} source={{ uri: image }} style={styles.productImage} />
+          ))}
+        </ScrollView>
+
+        <TouchableOpacity onPress={() => { }}>
+          <Image
+            source={require("../assets/favoriteOn.png")}
+            style={styles.iconFavo}
+          />
+        </TouchableOpacity>
 
         {/* Hiển thị thông tin sản phẩm */}
         <View style={styles.detailsContainer}>
@@ -76,12 +64,6 @@ const ProductDetailScreen = () => {
           <Text style={styles.description}>  ●  Size 2XL: 66 - 75kg</Text>
         </View>
 
-        {/* Địa chỉ shop */}
-        <View style={styles.detailsContainer}>
-          <Text style={styles.sectionTitle}>Địa chỉ shop</Text>
-          <Image source={require('../assets/Map.png')} style={styles.mapImage} />
-        </View>
-
         {/* Đánh giá */}
         <View style={styles.detailsContainer}>
           <Text style={styles.sectionTitle}>Đánh giá</Text>
@@ -102,19 +84,17 @@ const ProductDetailScreen = () => {
           </View>
         </View>
 
-
       </ScrollView>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.chatButton}>
+        {/* Footer */}
+       <View style={styles.footer}>
+         <TouchableOpacity style={styles.chatButton}>
           <Image source={require('../assets/chat.png')} style={styles.icon2} />
           <Text style={styles.buttonText1}>Chat</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.cartButton} onPress={() => setModalVisible(true)}>
+         <TouchableOpacity style={styles.cartButton} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText2}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buyButton} onPress={() => setModalVisible(true)}>
+         <TouchableOpacity style={styles.buyButton} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText3}>Mua ngay</Text>
         </TouchableOpacity>
       </View>
@@ -127,7 +107,7 @@ const ProductDetailScreen = () => {
               <View style={styles.modalContent}>
                 {/* Header */}
                 <View style={styles.modalHeader}>
-                  <Image source={product.image} style={styles.modalImage} />
+                  <Image source={{ uri: product.images[0] }} style={styles.modalImage} />
                   <View>
                     <Text style={styles.modalTitle}>{product.title}</Text>
                     <Text style={styles.sold2}>Kho: {product.quantity}</Text>
@@ -181,10 +161,6 @@ const ProductDetailScreen = () => {
 
                 {/* Footer */}
                 <View style={styles.modalFooter}>
-                  {/* <TouchableOpacity style={styles.cartButtonmodal} onPress={handleAddToCart}>
-                    <Text style={styles.buttonText2}>Thêm vào giỏ hàng</Text>
-                  </TouchableOpacity> */}
-
                   <TouchableOpacity style={styles.cartButtonmodal} >
                     <Text style={styles.buttonText2}>Thêm vào giỏ hàng</Text>
                   </TouchableOpacity>
@@ -204,6 +180,10 @@ const ProductDetailScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+  container: {
+    flex: 1,
     backgroundColor: '#fff',
   },
   scrollContainer: {
@@ -214,8 +194,13 @@ const styles = StyleSheet.create({
   },
   productImage: {
     width: '100%',
+    resizeMode: "cover",
     height: 300
   },
+  imageContainer: {
+    height: 350,
+  },
+
   detailsContainer: {
     padding: 15
   },
@@ -228,6 +213,12 @@ const styles = StyleSheet.create({
   icon2: {
     width: 25,
     height: 25,
+  },
+  iconFavo: {
+    width: 26,
+    height: 26,
+    left: 350,
+    top: 16
   },
   price: {
     fontSize: 22,
@@ -278,7 +269,8 @@ const styles = StyleSheet.create({
   },
   viewAll: {
     fontSize: 14,
-    color: 'blue'
+    fontWeight:'bold',
+    color: 'gray'
   },
   reviewContainer: {
     flexDirection: 'row',
@@ -336,7 +328,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     padding: 10,
     borderRadius: 40,
-    justifyContent: 'center', 
+    justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText1: {
@@ -345,7 +337,7 @@ const styles = StyleSheet.create({
   },
   buttonText2: {
     color: '#000',
-    textAlign:'center',
+    textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
   },
@@ -383,7 +375,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    bottom:10,
+    bottom: 10,
   },
   modalPrice: {
     color: 'red',
@@ -452,9 +444,44 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     padding: 10,
     borderRadius: 40,
-    justifyContent: 'center', 
+    justifyContent: 'center',
     alignItems: 'center',
+  },
+  imageContainer: {
+    height: 350,
+  },
+  productImage: {
+    width: 400,
+    height: 350,
+    resizeMode: "cover",
+  },
+  detailContainer: {
+    padding: 16,
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: -20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginVertical: 4,
+  },
+  soldText: {
+    fontSize: 14,
+    color: "gray",
+    marginBottom: 10,
+  },
+  detailText: {
+    fontSize: 16,
+    color: "#333",
+    marginVertical: 2,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+    justifyContent: "space-between",
   },
 });
 
-export default ProductDetailScreen;
+export default ShirtDetailScreen;
