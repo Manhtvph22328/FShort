@@ -143,11 +143,13 @@ const HomeScreen = () => {
       </View>
 
       {/* Danh sách sản phẩm theo danh mục */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardContainer}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} 
+      style={styles.cardContainer}>
         {getFilteredProducts().map((product) => (
           <TouchableOpacity 
           key={product.id}
-          onPress={() => navigation.navigate('ShirtDetail', { product: { ...product, images: [...product.images] } })}
+          onPress={() => navigation.navigate('ShirtDetail',
+             { product: { ...product, images: [...product.images] } })}
         >
         
             <View style={styles.card}>
@@ -211,10 +213,7 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F4F4F4',
     paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 20,
   },
   header: {
     flexDirection: 'row',
@@ -285,6 +284,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     flexDirection: 'row',
+    height:'auto'
   },
   card: {
     marginRight: 20,

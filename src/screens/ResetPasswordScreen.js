@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 30,
         width: "80%",
+        bottom: 20,
         justifyContent: 'flex-end',
         alignItems: "center",
         margin: 'auto'

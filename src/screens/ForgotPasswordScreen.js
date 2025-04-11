@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         backgroundColor: "black",
         padding: 15,
         borderRadius: 30,
-        marginTop: 20,
+        bottom: 20,
         width: "80%",
         alignItems: "center",
         margin: 'auto'

@@ -17,7 +17,7 @@ const LoginScreen = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState('');
 
   const handleLogin = () => {
-    if (username === 'M' && password === 'H') {
+    if (username === 'Manh' && password === '123456') {
       navigation.navigate('Tabs');
     } else {
       Alert.alert('Lỗi', 'Tên đăng nhập hoặc mật khẩu không đúng');
@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
   const handleForgotPassword = () => {
     navigation.navigate('ForgotPassword');
   };
-
+ 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Đăng Nhập</Text>

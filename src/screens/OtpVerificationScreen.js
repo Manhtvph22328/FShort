@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 30,
         width: "80%",
+        bottom: 20,
         alignItems: "center",
         margin:"auto"
     },

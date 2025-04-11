@@ -16,40 +16,50 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.title}>Đăng ký</Text>
-      </View>
-
-      <View style={styles.avatarContainer}>
-        <Image source={require('../assets/user.png')} style={styles.avatar} />
-        <TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            source={require('../assets/image.png')}
-            style={styles.addIcon}
+            source={require('../assets/iconback.png')}
+            style={styles.icon}
           />
         </TouchableOpacity>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerText}>Đăng ký</Text>
+        </View>
       </View>
 
-      <TextInput style={styles.input} placeholder="Tên đăng nhập" placeholderTextColor="#B0B0B0" />
-      <TextInput style={styles.input} placeholder="Tên đầy đủ" placeholderTextColor="#B0B0B0" />
-      <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#B0B0B0" keyboardType="email-address" />
-      <TextInput style={styles.input} placeholder="Số điện thoại" placeholderTextColor="#B0B0B0" keyboardType="phone-pad" />
-      
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.passwordInput}
-          placeholder="Mật khẩu"
-          placeholderTextColor="#B0B0B0"
-          secureTextEntry={!isPasswordVisible}
-        />
-        <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-          <Image
-            source={
-              isPasswordVisible ? require('../assets/eyeOpen.png') : require('../assets/eyeClosed.png')
-            }
-            style={styles.eyeIcon}
+      <View style={styles.maincontent}>
+        <View style={styles.avatarContainer}>
+          <Image source={require('../assets/user.png')} style={styles.avatar} />
+          <TouchableOpacity>
+            <Image
+              source={require('../assets/image.png')}
+              style={styles.addIcon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <TextInput style={styles.input} placeholder="Tên đăng nhập" placeholderTextColor="#B0B0B0" />
+        <TextInput style={styles.input} placeholder="Tên đầy đủ" placeholderTextColor="#B0B0B0" />
+        <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#B0B0B0" keyboardType="email-address" />
+        <TextInput style={styles.input} placeholder="Số điện thoại" placeholderTextColor="#B0B0B0" keyboardType="phone-pad" />
+
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Mật khẩu"
+            placeholderTextColor="#B0B0B0"
+            secureTextEntry={!isPasswordVisible}
           />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+            <Image
+              source={
+                isPasswordVisible ? require('../assets/eyeOpen.png') : require('../assets/eyeClosed.png')
+              }
+              style={styles.eyeIcon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => setIsModalVisible(true)}>
@@ -85,29 +95,52 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
     padding: 20,
   },
-  headerContainer: {
-    marginBottom: 30,
+  headerTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    marginLeft: 15,
+    paddingVertical: 10,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 5,
+    top: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  icon: {
+    width: 25,
+    height: 25,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'black',
   },
+  maincontent: {
+    justifyContent: "center",
+  },
   avatarContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   avatar: {
-    width: 180,
-    height: 180,
-    borderRadius: 100,
+    width: 150,
+    height: 150,
+    borderRadius: 80,
     backgroundColor: '#FFFFFF',
   },
   addIcon: {
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
     position: 'absolute',
-    bottom: -20,
+    bottom: -17,
+    left: -10
   },
   input: {
     height: 65,
@@ -142,10 +175,13 @@ const styles = StyleSheet.create({
     height: 24,
   },
   button: {
-    backgroundColor: '#000000',
-    borderRadius: 45,
-    paddingVertical: 15,
-    alignItems: 'center',
+    backgroundColor: "black",
+    padding: 15,
+    borderRadius: 30,
+    marginTop: 20,
+    width: "80%",
+    alignItems: "center",
+    margin: 'auto'
   },
   buttonText: {
     color: '#FFFFFF',
