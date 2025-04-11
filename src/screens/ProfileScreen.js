@@ -60,7 +60,7 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.functionText}>Chỉnh sửa địa chỉ</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.functionButton} onPress={{}}>
+          <TouchableOpacity style={styles.functionButton} onPress={() => navigation.navigate('OrderHistory')}>
             <Image source={require('../assets/history.png')} style={styles.icon} />
             <Text style={styles.functionText}>Lịch sử mua hàng</Text>
           </TouchableOpacity>
