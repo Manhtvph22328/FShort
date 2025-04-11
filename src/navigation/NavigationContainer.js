@@ -21,6 +21,9 @@ import EditdressScreen from '../screens/EditAdress';
 import OrderHistory from '../screens/OrderHistory';
 import Orderdetail from '../screens/Orderdetail';
 import Evaluate from '../screens/Evaluate';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import OtpVerificationScreen from '../screens/OtpVerificationScreen';
+import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +48,9 @@ const AuthStackScreen = () => (
     <Stack.Screen name="EditAdress" component={EditdressScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Orderdetail" component={Orderdetail} options={{ headerShown: false }} />
     <Stack.Screen name="Evaluate" component={Evaluate} options={{ headerShown: false }} />
+    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 

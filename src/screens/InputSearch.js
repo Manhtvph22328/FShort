@@ -105,7 +105,7 @@ export default function InputSearch({ visible, onClose, onApplyFilters, initialF
                    style={[styles.ratingButton, filters.rating === rating && styles.selectedRatingButton]}
                    onPress={() => setFilters(prev => ({...prev, rating}))}>
                    <Image
-                     source={require('../assets/star.png')}
+                     source={require('../assets/star1.png')}
                      style={[styles.starIcon, filters.rating === rating && styles.selectedStarIcon]}
                    />
                    <Text style={[styles.ratingText, filters.rating === rating && styles.selectedRatingText]}>

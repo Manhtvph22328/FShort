@@ -26,7 +26,6 @@ const categories = {
   'Gợi ý cho bạn': product => product.rating > 4.0,
   'Phổ biến': product => product.rating > 3.5,
   'Xu hướng': product => product.rating > 4.5,
-  'Yêu thích': () => false, // Không có sản phẩm
 };
 
 export default function SearchScreen() {

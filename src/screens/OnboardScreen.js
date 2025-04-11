@@ -59,7 +59,7 @@ const OnboardScreen = ({navigation}) => {
                             if (activeIndex < slides.length - 1) {
                                 sliderRef.current.goToSlide(activeIndex + 1, true);
                             } else {
-                                navigation.navigate('Login');
+                                navigation.navigate('Tabs');
                             }
                         }}
                     >
@@ -68,7 +68,7 @@ const OnboardScreen = ({navigation}) => {
 
                     <TouchableOpacity
                         style={[styles.button, styles.skipButton]}
-                        onPress={() => navigation.navigate('Login')}
+                        onPress={() => navigation.navigate('Tabs')}
                     >
                         <Text style={styles.nextButtonText}>Bỏ qua</Text>
                     </TouchableOpacity>
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20,
+        padding: 18,
         marginBottom: 20,
     },
     image: {
@@ -127,12 +127,13 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         textAlign: 'center',
+        margin:'auto',
+        bottom: 5
     },
     text: {
         color: '#000000',
-        fontSize: 14,
+        fontSize: 14.9,
         textAlign: 'center',
-        margin: 10,
     },
     paginationContainer: {
         flexDirection: 'row',
