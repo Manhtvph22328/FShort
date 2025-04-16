@@ -1,15 +1,16 @@
+// App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import TabNavigator from './navigation/TabNavigator';
-import { CartProvider } from './src/context/CartContext';
+import { AuthProvider } from './src/contexts/AuthContext'; // đã sửa đường dẫn
 
 const App = () => {
   return (
-    <CartProvider>
+    <AuthProvider>
       <NavigationContainer>
         <TabNavigator />
       </NavigationContainer>
-    </CartProvider>
+    </AuthProvider>
   );
 };
 

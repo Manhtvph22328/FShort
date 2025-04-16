@@ -59,7 +59,7 @@ const OnboardScreen = ({navigation}) => {
                             if (activeIndex < slides.length - 1) {
                                 sliderRef.current.goToSlide(activeIndex + 1, true);
                             } else {
-                                navigation.navigate('Tabs');
+                                navigation.navigate('Login');
                             }
                         }}
                     >
@@ -68,7 +68,7 @@ const OnboardScreen = ({navigation}) => {
 
                     <TouchableOpacity
                         style={[styles.button, styles.skipButton]}
-                        onPress={() => navigation.navigate('Tabs')}
+                        onPress={() => navigation.navigate('Login')}
                     >
                         <Text style={styles.nextButtonText}>Bỏ qua</Text>
                     </TouchableOpacity>

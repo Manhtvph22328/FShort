@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../contexts/CartContext';
 
 const CartScreen = () => {
   const [cartItems, setCartItems] = useState([
