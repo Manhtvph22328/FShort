@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   View,
@@ -6,21 +7,42 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  Alert,
 } from 'react-native';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigation = useNavigation();
 
-  const handleLogin = () => {
-    if (username === 'Manh' && password === '123456') {
+  const handleLogin = async () => {
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
+
+    console.log('Đang gửi:', { username: trimmedUsername, password: trimmedPassword });
+
+    try {
+      const res = await axios.post('http://192.168.1.19:5000/api/users/login', {
+        username: trimmedUsername,
+        password: trimmedPassword,
+      });
+
+      console.log('Login response:', res.data);
+
       navigation.navigate('Tabs');
-    } else {
-      Alert.alert('Lỗi', 'Tên đăng nhập hoặc mật khẩu không đúng');
+    } catch (error) {
+      if (error.response) {
+        console.log('Login error:', error.response.data);
+        setErrorMessage(error.response.data.message || 'Đăng nhập thất bại!');
+      } else {
+        console.log('Login error:', error.message);
+        setErrorMessage('Lỗi kết nối tới server!');
+      }
     }
   };
 
@@ -41,22 +63,18 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <Image source={require('../assets/iconuser.png')} style={styles.icon} />
         <TextInput
-          style={[styles.input, usernameError ? styles.inputError : null]}
-          placeholder="Tên đăng nhập"
-          placeholderTextColor="#B0B0B0"
-          keyboardType="default"
-          value={username}
-          onChangeText={setUsername}
-        />
+        style={styles.input}
+        placeholder="Tên đăng nhập"
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+      />
       </View>
-      {usernameError ? (
-        <Text style={styles.errorText}>{usernameError}</Text>
-      ) : null}
 
       <View style={styles.inputContainer}>
         <Image source={require('../assets/look.png')} style={styles.icon} />
         <TextInput
-          style={[styles.input, passwordError ? styles.inputError : null]}
+          style={[styles.input]}
           placeholder="Mật khẩu"
           placeholderTextColor="#B0B0B0"
           secureTextEntry={!isPasswordVisible}
@@ -75,9 +93,8 @@ const LoginScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {passwordError ? (
-        <Text style={styles.errorText}>{passwordError}</Text>
-      ) : null}
+
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
       <TouchableOpacity onPress={handleForgotPassword}>
         <Text style={styles.textclick}>Quên mật khẩu?</Text>
