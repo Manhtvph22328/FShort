@@ -34,5 +34,4 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
 export default api;

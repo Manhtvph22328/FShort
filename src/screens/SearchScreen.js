@@ -1,47 +1,83 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, FlatList, ScrollView, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { searchProducts } from '../services/productService';
 import InputSearchModal from './InputSearch';
+import { useNavigation } from '@react-navigation/native'; // import useNavigation
 
-// Dữ liệu sản phẩm
-const products = [
-  { id: 1, title: 'Áo Hoodie', price: '300.000₫', rating: 3.5, image: require('../assets/Sp1.jpg'), description: 'Chất liệu vải dày dặn.' },
-  { id: 2, title: 'Áo Hoodie Xám', price: '320.000₫', rating: 4.0, image: require('../assets/Sp2.jpg'), description: 'Thoải mái, phong cách.' },
-  { id: 3, title: 'Áo Hoodie Đen', price: '290.000₫', rating: 4.2, image: require('../assets/Sp3.jpg'), description: 'Mềm mại, giữ ấm tốt.' },
-  { id: 4, title: 'Áo Hoodie Trắng', price: '350.000₫', rating: 4.6, image: require('../assets/Sp2.jpg'), description: 'Đẹp và phong cách.' },
-];
-
-// Danh mục sản phẩm và điều kiện lọc
-const categories = {
-  'Tất cả': () => true, // Hiển thị tất cả sản phẩm
-  'Gợi ý cho bạn': product => product.rating > 4.0,
-  'Phổ biến': product => product.rating > 3.5,
-  'Xu hướng': product => product.rating > 4.5,
-};
 
 export default function SearchScreen() {
-  const [selectedCategory, setSelectedCategory] = useState('Tất cả'); // Đặt mặc định là "Tất cả"
+  const navigation = useNavigation(); // Khai báo useNavigation hook
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('Tất cả');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // Lọc sản phẩm theo danh mục và từ khóa tìm kiếm
-  const filteredProducts = products.filter(product =>
-    categories[selectedCategory](product) &&
-    product.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const categories = {
+    'Tất cả': () => true,
+    'Gợi ý cho bạn': product => product.rating > 4.0,
+    'Phổ biến': product => product.rating > 3.5,
+    'Xu hướng': product => product.rating > 4.5,
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        console.log('Đang gọi API tìm kiếm sản phẩm với query:', searchQuery);
+        const result = await searchProducts(searchQuery);
+        console.log('Kết quả API trả về:', result);
+
+        const mappedProducts = result.map(p => ({
+          id: p._id,
+          title: p.name_product,
+          price: `${p.price.toLocaleString()}₫`,
+          rating: p.rating,
+          description: p.description || 'Không có mô tả',
+          image: p.images && p.images[0] ? { uri: `http://10.0.3.2:5000${p.images[0]}` } : { uri: 'https://via.placeholder.com/150' },
+        }));
+
+        console.log('Sản phẩm đã được map:', mappedProducts);
+
+        setProducts(mappedProducts);
+      } catch (error) {
+        console.error('Lỗi khi tìm kiếm:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (searchQuery.length > 0) {
+      fetchProducts();
+    } else {
+      setProducts([]);
+      setFilteredProducts([]);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const filterProducts = () => {
+      const filtered = products.filter(product =>
+        categories[selectedCategory](product) &&
+        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    };
+
+    filterProducts();
+  }, [selectedCategory, searchQuery, products]);
+
+  const handleProductPress = (product) => {
+    navigation.navigate('ShirtDetail', {product});
+  };
+  
+
 
   return (
     <View style={styles.container}>
+
       {/* Header */}
       <View style={styles.header}>
         <Image source={require('../assets/Logo.png')} style={styles.headerLogo} />
@@ -64,10 +100,7 @@ export default function SearchScreen() {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-            <Image
-              source={require('../assets/sortOff.png')}
-              style={styles.searchIcon}
-            />
+            <Image source={require('../assets/sortOff.png')} style={styles.searchIcon} />
           </TouchableOpacity>
         )}
       </View>
@@ -75,21 +108,13 @@ export default function SearchScreen() {
       {/* Categories */}
       <View style={styles.categoriesContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {Object.keys(categories).map(category => ( // Dùng đúng danh sách danh mục
+          {Object.keys(categories).map(category => (
             <TouchableOpacity
               key={category}
-              style={[
-                styles.categoryButton,
-                selectedCategory === category && styles.selectedCategoryButton,
-              ]}
-              onPress={() => setSelectedCategory(category)} // Không cần kiểm tra lại
+              style={[styles.categoryButton, selectedCategory === category && styles.selectedCategoryButton]}
+              onPress={() => setSelectedCategory(category)}
             >
-              <Text
-                style={[
-                  styles.categoryText,
-                  selectedCategory === category && styles.selectedCategoryText,
-                ]}
-              >
+              <Text style={[styles.categoryText, selectedCategory === category && styles.selectedCategoryText]}>
                 {category}
               </Text>
             </TouchableOpacity>
@@ -112,25 +137,34 @@ export default function SearchScreen() {
           data={filteredProducts}
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
-            <View style={styles.productCard}>
-              <Image source={item.image} style={styles.productImage} />
-              <View style={styles.productInfo}>
-                <Text style={styles.productTitle}>{item.title}</Text>
-                <Text style={styles.productDescription}>{item.description}</Text>
-                <Text style={styles.productRating}>⭐ {item.rating}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
+            <TouchableOpacity onPress={() => handleProductPress(item)}>
+              <View style={styles.productCard}>
+                <Image source={item.image} style={styles.productImage} />
+                <View style={styles.productInfo}>
+                  <Text style={styles.productTitle}>{item.title}</Text>
+                  <Text numberOfLines={1} style={styles.productDescription}>
+                    {item.description}
+                  </Text>
+                  {item.rating > 0 && (
+                    <Text style={styles.productRating}>⭐ {item.rating}</Text>
+                  )}
+                  <Text style={styles.productPrice}>{item.price}</Text>
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={<Text style={styles.emptyText}>Không tìm thấy sản phẩm phù hợp</Text>}
         />
       )}
-    {/* gọi Model */}
-    <InputSearchModal visible={isModalVisible} onClose={() => setIsModalVisible(false)} />
+
+      {/* Gọi modal lọc */}
+      <InputSearchModal visible={isModalVisible} onClose={() => setIsModalVisible(false)} />
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -249,7 +283,9 @@ const styles = StyleSheet.create({
   },
   productDescription: {
     fontSize: 12,
-    color: '#777'
+    color: '#777',
+    marginBottom: 5
+
   },
   productRating: {
     fontSize: 12,
@@ -299,3 +335,4 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 });
+

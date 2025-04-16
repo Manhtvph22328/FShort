@@ -13,6 +13,9 @@ import { useNavigation } from '@react-navigation/native';
 
 const ShirtDetailScreen = ({ route }) => {
   const { product } = route.params;
+  // console.log(product.product_name);
+  // In ra ID sản phẩm
+  console.log(product.id);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSize, setSelectedSize] = useState(null);
@@ -20,59 +23,112 @@ const ShirtDetailScreen = ({ route }) => {
 
   const navigation = useNavigation();
 
+  const getSizeDescription = (size) => {
+    switch (size.toUpperCase()) {
+      case 'S':
+        return 'Nặng: 45-55kg ~ Cao: 1m55-1m65';
+      case 'M':
+        return 'Nặng 55-65kg ~ Cao: 1m65-1m72';
+      case 'L':
+        return 'Nặng: 65-75kg ~ Cao: 1m72-1m78';
+      case 'XL':
+        return 'Nặng: 75-90kg ~ Cao: >1m78';
+      default:
+        return 'Không có mô tả';
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* ScrollView để vuốt ảnh */}
       <ScrollView style={styles.scrollContainer}>
         <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}
           style={styles.imageContainer}>
-          {product.images.map((image, index) => (
+          {product.images && product.images.length > 0 && product.images.map((image, index) => (
             <Image key={index} source={{ uri: image }} style={styles.productImage} />
           ))}
+
         </ScrollView>
 
-        <TouchableOpacity onPress={() => { }}>
+        {/* <TouchableOpacity onPress={() => { }}>
           <Image
             source={require("../assets/favoriteOn.png")}
             style={styles.iconFavo}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Hiển thị thông tin sản phẩm */}
         <View style={styles.detailsContainer}>
-          <Text style={styles.price}>{product.price}</Text>
-          <Text style={styles.productName}>{product.title}</Text>
-          <Text style={styles.sold}>Đã bán: 999</Text>
+          <View style={styles.infoContainer}>
+            <View style={styles.priceRow}>
+              <Text style={styles.price}>
+                {product.price.toLocaleString('vi-VN')}₫
+              </Text>
+              <TouchableOpacity onPress={() => { }}>
+                <Image
+                  source={require("../assets/favoriteOn.png")}
+                  style={styles.iconFavoInline}
+                />
+              </TouchableOpacity>
+            </View>
 
-          {/* Mô tả sản phẩm */}
-          <Text style={styles.sectionTitle}>Mô tả</Text>
-          <Text style={styles.description}>   {product.description2}</Text>
+            <Text style={styles.productName}>
+              {product.name_product ? product.name_product : 'Sản phẩm không có tên'}
+            </Text>
 
-          {/* Mô tả sản phẩm */}
-          <Text style={styles.sectionTitle}>Chi tiết</Text>
-          <Text style={styles.description}>  ●  {product.description3}</Text>
-          <Text style={styles.description}>  ●  {product.description4}</Text>
-          <Text style={styles.description}>  ●  {product.description5}</Text>
+            <Text style={styles.sold}>
+              Đã bán: {product.sold || 0}
+            </Text>
+          </View>
+
+          {/* Mô tả từng dòng */}
+          {/* Mô tả phần 1 */}
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.sectionTitle}>Mô tả</Text>
+            {product.description && product.description.length > 0 ? (
+              <Text style={styles.description}>{product.description[0]}</Text> // Hiển thị mô tả đầu tiên
+            ) : (
+              <Text style={styles.description}>Không có mô tả</Text>
+            )}
+          </View>
+
+          {/* Mô tả phần 2 - Chi tiết */}
+          {product.description && product.description.length > 1 && (
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.sectionTitle}>Chi tiết</Text>
+              {product.description.slice(1).map((desc, index) => (
+                <Text key={index} style={styles.description}>• {desc}</Text> // Hiển thị các mô tả còn lại
+              ))}
+            </View>
+          )}
         </View>
+
 
         {/* Kích cỡ */}
         <View style={styles.detailsContainer}>
           <Text style={styles.sectionTitle}>Kích cỡ</Text>
-          <Text style={styles.description}>  ●  Size M: 35 - 45kg</Text>
-          <Text style={styles.description}>  ●  Size L: 45 - 55kg</Text>
-          <Text style={styles.description}>  ●  Size XL: 55 - 65kg</Text>
-          <Text style={styles.description}>  ●  Size 2XL: 66 - 75kg</Text>
+          {product.size && product.size.length > 0 ? (
+            product.size.map((size, index) => (
+              <Text key={index} style={styles.description}>
+                ● Size {size}: {getSizeDescription(size)}
+              </Text>
+            ))
+          ) : (
+            <Text style={styles.description}>Không có thông tin kích cỡ</Text>
+          )}
         </View>
+
 
         {/* Đánh giá */}
         <View style={styles.detailsContainer}>
           <Text style={styles.sectionTitle}>Đánh giá</Text>
           <View style={styles.reviewRow}>
-            <Text style={styles.rating}>⭐ 3.5</Text>
+            <Text style={styles.rating}>⭐ {product.rating || 0}</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Evaluate')}>
               <Text style={styles.viewAll}>Xem tất cả</Text>
             </TouchableOpacity>
           </View>
+          {/* Đánh giá demo fix cứng */}
           <View style={styles.reviewContainer}>
             <Image source={require('../assets/Sp1.jpg')} style={styles.avatar} />
             <View>
@@ -84,17 +140,18 @@ const ShirtDetailScreen = ({ route }) => {
           </View>
         </View>
 
+
       </ScrollView>
-        {/* Footer */}
-       <View style={styles.footer}>
-         <TouchableOpacity style={styles.chatButton}>
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.chatButton}>
           <Image source={require('../assets/chat.png')} style={styles.icon2} />
           <Text style={styles.buttonText1}>Chat</Text>
         </TouchableOpacity>
-         <TouchableOpacity style={styles.cartButton} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity style={styles.cartButton} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText2}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
-         <TouchableOpacity style={styles.buyButton} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity style={styles.buyButton} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText3}>Mua ngay</Text>
         </TouchableOpacity>
       </View>
@@ -109,38 +166,65 @@ const ShirtDetailScreen = ({ route }) => {
                 <View style={styles.modalHeader}>
                   <Image source={{ uri: product.images[0] }} style={styles.modalImage} />
                   <View>
-                    <Text style={styles.modalTitle}>{product.title}</Text>
+                    <Text style={styles.modalTitle}>{product.name_product}</Text>
                     <Text style={styles.sold2}>Kho: {product.quantity}</Text>
                     <Text style={styles.modalPrice}>{product.price}</Text>
                   </View>
                 </View>
 
                 {/* Chọn kích thước */}
+                {/* Chọn kích thước từ API và hiển thị mô tả */}
                 <Text style={styles.sectionTitle}>Kích thước</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {['M', 'L', 'XL', '2XL'].map(size => (
-                    <TouchableOpacity
-                      key={size}
-                      style={[
-                        styles.sortButton,
-                        selectedSize === size && styles.selectedButton
-                      ]}
-                      onPress={() => setSelectedSize(size)}>
-                      <Text
+                  {product.size && product.size.map((size) => {
+                    const sizeDescriptions = {
+                      S: 'Nặng: 45-55kg ~ Cao: 1m55-1m65',
+                      M: 'Nặng: 55-65kg ~ Cao: 1m65-1m72',
+                      L: 'Nặng: 65-75kg ~ Cao: 1m72-1m78',
+                      XL: 'Nặng: 75-90kg ~ Cao: >1m78',
+                    };
+
+                    return (
+                      <TouchableOpacity
+                        key={size}
                         style={[
-                          styles.sortText,
-                          selectedSize === size && styles.selectedText
-                        ]}>
-                        {size}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                          styles.sortButton,
+                          selectedSize === size && styles.selectedButton
+                        ]}
+                        onPress={() => setSelectedSize(size)}
+                      >
+                        <Text
+                          style={[
+                            styles.sortText,
+                            selectedSize === size && styles.selectedText
+                          ]}
+                        >
+                          {size}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </ScrollView>
+
+                {selectedSize && (
+                  <Text style={styles.description}>
+                    {(() => {
+                      const descMap = {
+                        S: 'Nặng: 45-55kg ~ Cao: 1m55-1m65',
+                        M: 'Nặng: 55-65kg ~ Cao: 1m65-1m72',
+                        L: 'Nặng: 65-75kg ~ Cao: 1m72-1m78',
+                        XL: 'Nặng: 75-90kg ~ Cao: >1m78',
+                      };
+                      return descMap[selectedSize] || 'Không có mô tả cho size này';
+                    })()}
+                  </Text>
+                )}
+
 
                 {/* Chọn màu sắc */}
                 <Text style={styles.sectionTitle}>Màu sắc</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {['Trắng', 'Đen'].map(color => (
+                  {product.color && product.color.map(color => (
                     <TouchableOpacity
                       key={color}
                       style={[
@@ -158,7 +242,6 @@ const ShirtDetailScreen = ({ route }) => {
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
-
                 {/* Footer */}
                 <View style={styles.modalFooter}>
                   <TouchableOpacity style={styles.cartButtonmodal} >
@@ -182,10 +265,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  infoContainer: {
+    marginBottom: 15,
   },
+
   scrollContainer: {
     paddingBottom: 80,
   },
@@ -224,19 +307,19 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: 'red',
-    top: -25
+    marginBottom: 5,
   },
   productName: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginVertical: 5,
-    top: -20
+    color: '#000',
+    marginBottom: 5,
   },
   sold: {
     fontSize: 14,
     color: 'gray',
-    top: -20
   },
+
   sold2: {
     fontSize: 14,
     color: 'gray',
@@ -269,7 +352,7 @@ const styles = StyleSheet.create({
   },
   viewAll: {
     fontSize: 14,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     color: 'gray'
   },
   reviewContainer: {
@@ -482,6 +565,24 @@ const styles = StyleSheet.create({
     marginTop: 20,
     justifyContent: "space-between",
   },
+  colorCircle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 10,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  iconFavoInline: {
+    width: 26,
+    height: 26,
+    marginLeft: 10,
+  },
+
 });
 
 export default ShirtDetailScreen;
