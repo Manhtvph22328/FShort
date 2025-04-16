@@ -8,11 +8,45 @@ import {
   StyleSheet,
   Image,
   Modal,
+  Alert,
 } from 'react-native';
+import axios from 'axios';
 
 const RegisterScreen = ({ navigation }) => {
+  const [username, setUsername] = useState('');
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleRegister = async () => {
+    if (!username || !fullname || !email || !phone || !password) {
+      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/register', {
+        username,
+        fullname,
+        email,
+        phone,
+        password,
+        role: 'user',
+      });
+
+      if (response.status === 200) {
+        setIsModalVisible(true);
+      } else {
+        Alert.alert('Thông báo', 'Đăng ký thất bại. Vui lòng thử lại.');
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Lỗi', 'Đã xảy ra lỗi khi đăng ký.');
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -39,10 +73,36 @@ const RegisterScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TextInput style={styles.input} placeholder="Tên đăng nhập" placeholderTextColor="#B0B0B0" />
-        <TextInput style={styles.input} placeholder="Tên đầy đủ" placeholderTextColor="#B0B0B0" />
-        <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#B0B0B0" keyboardType="email-address" />
-        <TextInput style={styles.input} placeholder="Số điện thoại" placeholderTextColor="#B0B0B0" keyboardType="phone-pad" />
+        <TextInput
+          style={styles.input}
+          placeholder="Tên đăng nhập"
+          placeholderTextColor="#B0B0B0"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Tên đầy đủ"
+          placeholderTextColor="#B0B0B0"
+          value={fullname}
+          onChangeText={setFullname}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#B0B0B0"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Số điện thoại"
+          placeholderTextColor="#B0B0B0"
+          keyboardType="phone-pad"
+          value={phone}
+          onChangeText={setPhone}
+        />
 
         <View style={styles.passwordContainer}>
           <TextInput
@@ -50,11 +110,15 @@ const RegisterScreen = ({ navigation }) => {
             placeholder="Mật khẩu"
             placeholderTextColor="#B0B0B0"
             secureTextEntry={!isPasswordVisible}
+            value={password}
+            onChangeText={setPassword}
           />
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
             <Image
               source={
-                isPasswordVisible ? require('../assets/eyeOpen.png') : require('../assets/eyeClosed.png')
+                isPasswordVisible
+                  ? require('../assets/eyeOpen.png')
+                  : require('../assets/eyeClosed.png')
               }
               style={styles.eyeIcon}
             />
@@ -62,7 +126,7 @@ const RegisterScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => setIsModalVisible(true)}>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Tiếp tục</Text>
       </TouchableOpacity>
 
@@ -88,6 +152,8 @@ const RegisterScreen = ({ navigation }) => {
     </ScrollView>
   );
 };
+
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -239,4 +305,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
