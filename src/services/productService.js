@@ -2,7 +2,7 @@
 import api from "./api";
 
 
-const BASE_IMAGE_URL = 'http://10.0.3.2:5000';
+const BASE_IMAGE_URL = 'http://192.168.1.19:5000';
 
 const fixProductImages = (product) => ({
   ...product,

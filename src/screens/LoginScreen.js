@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,18 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../contexts/AuthContext';
 
 const LoginScreen = () => {
+
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState('');
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+
+  const { login } = useContext(AuthContext);
+  console.log('AuthContext:', useContext(AuthContext)); 
+
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
 
@@ -33,8 +38,9 @@ const LoginScreen = () => {
       });
 
       console.log('Login response:', res.data);
+      login(res.data.user, res.data.token);
 
-      navigation.navigate('Tabs');
+      navigation.navigate('Car');
     } catch (error) {
       if (error.response) {
         console.log('Login error:', error.response.data);
