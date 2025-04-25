@@ -6,20 +6,23 @@ import {
   Modal,
   Image,
 } from 'react-native';
-
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
-
+import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { removeCart } from '../redux/reducer/cartSlice';
 const ProfileScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { user, logout } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const handleLogout = async () => {
-    try {
-      await logout();
-      setModalVisible(false);
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+    setModalVisible(false);
+    console.log("User logged out!");
+
+    await AsyncStorage.removeItem('token');  // Xoá token luôn
+    dispatch(removeCart())
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Login' }],
+    });
   };
 
   return (
@@ -43,8 +46,8 @@ const ProfileScreen = ({ navigation }) => {
             <Image source={require('../assets/brush.png')} style={styles.icon} />
           </TouchableOpacity>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>{user?.fullname}</Text>
-            <Text style={styles.email}>{user?.email}</Text>
+            <Text style={styles.name}>Trình Văn Mạnh</Text>
+            <Text style={styles.email}>manh@gmail.com</Text>
           </View>
         </View>
       </View>
@@ -188,12 +191,12 @@ const styles = StyleSheet.create({
   functionText: {
     marginLeft: 10,
     fontSize: 18,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     color: '#000000',
   },
   logoutText: {
     color: 'red',
-    fontWeight:'bold',
+    fontWeight: 'bold',
   },
   // Modal Styles
   modalOverlay: {
@@ -218,13 +221,13 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 30,
     marginBottom: 20,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     textAlign: "center"
   },
   modalMessage: {
     fontSize: 20,
     marginBottom: 50,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     textAlign: "center"
   },
   logoutButton: {
@@ -248,12 +251,12 @@ const styles = StyleSheet.create({
   cancelText: {
     color: "black",
     fontSize: 18,
-    fontWeight:'bold',
+    fontWeight: 'bold',
   },
   logoutText2: {
     fontSize: 18,
     color: '#ffffff',
-    fontWeight:'bold',
+    fontWeight: 'bold',
   },
 });
 
