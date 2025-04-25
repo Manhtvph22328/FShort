@@ -1,28 +1,31 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image, Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // import navigation hook
-import { AuthContext } from '../contexts/AuthContext';
+
 import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import MyCarScreen from '../screens/MyCarScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   const navigation = useNavigation(); // lấy navigation
-  const { user } = useContext(AuthContext);
-  const isLoggedIn = !!user;
+  const [isLogin, setIsLogin] = useState();
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        setIsLogin(true)
+      }
+    }
+    getToken();
+  }, []);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [pendingRoute, setPendingRoute] = useState(null); // lưu route bị chặn
-
-  useEffect(() => {
-    if (isLoggedIn && pendingRoute) {
-      navigation.navigate(pendingRoute);
-      setPendingRoute(null);
-    }
-  }, [isLoggedIn, pendingRoute]);
 
   const getIcon = (route, focused) => {
     let iconName;
@@ -47,7 +50,7 @@ const TabNavigator = () => {
   };
 
   const handleTabPress = (route) => {
-    if ((route.name === 'Car' ) && !isLoggedIn) {
+    if ((route.name === 'Car' || route.name === 'Profile') && !isLogin) {
       setPendingRoute(route.name); // lưu lại route
       setShowLoginModal(true);     // bật modal
       return false;

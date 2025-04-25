@@ -1,5 +1,5 @@
 
-import React, { useState, useContext} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,23 +8,21 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../contexts/AuthContext';
+import api from '../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {login} from '../redux/reducer/userSlice';
+import {useDispatch} from 'react-redux';
 
 const LoginScreen = () => {
-
-  const [username, setUsername] = useState(''); 
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const { login } = useContext(AuthContext);
-  console.log('AuthContext:', useContext(AuthContext)); 
-
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
-
+  const dispatch = useDispatch();
   const handleLogin = async () => {
     const trimmedUsername = username.trim();
     const trimmedPassword = password.trim();
@@ -32,15 +30,14 @@ const LoginScreen = () => {
     console.log('Đang gửi:', { username: trimmedUsername, password: trimmedPassword });
 
     try {
-      const res = await axios.post('http://192.168.1.19:5000/api/users/login', {
+      const res = await api.post('/users/login', {
         username: trimmedUsername,
         password: trimmedPassword,
       });
+      await AsyncStorage.setItem('token', res.accessToken);
+      dispatch(login({accessToken: res.accessToken}));
 
-      console.log('Login response:', res.data);
-      login(res.data.user, res.data.token);
-
-      navigation.navigate('Car');
+      navigation.navigate('Tabs');
     } catch (error) {
       if (error.response) {
         console.log('Login error:', error.response.data);
@@ -59,7 +56,7 @@ const LoginScreen = () => {
   const handleForgotPassword = () => {
     navigation.navigate('ForgotPassword');
   };
- 
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Đăng Nhập</Text>

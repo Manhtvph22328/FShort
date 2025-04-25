@@ -24,8 +24,20 @@ import Evaluate from '../screens/Evaluate';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import OtpVerificationScreen from '../screens/OtpVerificationScreen';
 import ResetPasswordScreen from '../screens/ResetPasswordScreen';
+import OrderDone from '../screens/orderDone';
+import ProductReview from '../screens/ProductCanReview';
+import Notification from '../screens/Notification';
 
 const Stack = createNativeStackNavigator();
+const linking = {
+    prefixes: ['fshort--android://'],
+    config: {
+        screens: {
+            Tabs: '',
+            OrderDone: 'orderdone',
+        },
+    },
+};
 
 const AuthStackScreen = () => (
   <Stack.Navigator initialRouteName="WelcomeScreen">
@@ -44,20 +56,23 @@ const AuthStackScreen = () => (
     <Stack.Screen name="Favorite" component={Favorite} options={{ headerShown: false }} />
     <Stack.Screen name="Order" component={OrderScreen} options={{ headerShown: false }} />
     <Stack.Screen name="OrderHistory" component={OrderHistory} options={{ headerShown: false }} />
+    <Stack.Screen name="OrderDone" component={OrderDone} options={{ headerShown: false }} />
     <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
     <Stack.Screen name="EditAdress" component={EditdressScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Orderdetail" component={Orderdetail} options={{ headerShown: false }} />
     <Stack.Screen name="Evaluate" component={Evaluate} options={{ headerShown: false }} />
+    <Stack.Screen name="ProductReview" component={ProductReview} options={{ headerShown: false }} />
     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
     <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} options={{ headerShown: false }} />
     <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Notification" component={Notification} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
 const NavigationContainerComponent = () => {
   return (
-    <NavigationContainer>
-     <AuthStackScreen/>
+    <NavigationContainer linking={linking}>
+    <AuthStackScreen/>
     </NavigationContainer>
   );
 };

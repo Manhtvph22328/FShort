@@ -1,11 +1,17 @@
+// App.js
 import React from 'react';
-import { AuthProvider } from './context/AuthContext';
-import RootNavigator from './navigations/RootNavigator';
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigator from './navigation/TabNavigator';
+import { AuthProvider } from './src/contexts/AuthContext'; // đã sửa đường dẫn
 
-export default function App() {
+const App = () => {
   return (
     <AuthProvider>
-      <RootNavigator />
+      <NavigationContainer>
+        <TabNavigator />
+      </NavigationContainer>
     </AuthProvider>
   );
-}
+};
+
+export default App;
