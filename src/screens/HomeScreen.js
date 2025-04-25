@@ -28,6 +28,7 @@ const HomeScreen = () => {
           getAllProducts(),
           getAllCategories()
         ]);
+        console.log(productData);
         setProducts(productData);
         setCategories(categoryData);
       } catch (error) {
@@ -70,10 +71,10 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <Image source={require('../assets/Logo.png')} style={styles.logo} />
         <View style={styles.headerTextContainer}>
-          <Text style={styles.headerText}>Men's Shop FShort</Text>
+          <Text style={styles.headerText}>Men's Shop FSport</Text>
           <Text style={styles.subHeaderText}>Hello, My Friend</Text>
         </View>
-        <TouchableOpacity onPress={() => { }}>
+        <TouchableOpacity onPress={()  => navigation.navigate('Notification')}>
           <Image source={require('../assets/notificationOn.png')} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Favorite')}>
