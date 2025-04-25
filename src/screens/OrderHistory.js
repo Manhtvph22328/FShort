@@ -1,95 +1,170 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+  View, Text, TouchableOpacity, Image,
+  ScrollView, FlatList, StyleSheet, ActivityIndicator, Alert,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from "react-redux";
+import {cancelOrder, getOrdersByStatus} from '../redux/action/orderAction';
+import {addToCart} from '../redux/action/cartAction';
 
-const ordersData = [
-  {
-    id: 141,
-    status: "Đang chờ",
-    product: {
-      name: "Áo Hoodie",
-      size: "S",
-      color: "Vàng",
-      price: 300000,
-      quantity: 1,
-      image: require("../assets/Sp3.jpg"),
-    },
-  },
-  {
-    id: 142,
-    status: "Đang chờ",
-    product: {
-      name: "Áo Hoodie",
-      size: "S",
-      color: "Vàng",
-      price: 300000,
-      quantity: 1,
-      image: require("../assets/Sp2.jpg"),
-    },
-  },
-  {
-    id: 143,
-    status: "Đang chờ",
-    product: {
-      name: "Áo Hoodie",
-      size: "S",
-      color: "Vàng",
-      price: 300000,
-      quantity: 1,
-      image: require("../assets/Sp1.jpg"),
-    },
-  },
-  {
-    id: 144,
-    status: "Đang giao",
-    product: {
-      name: "Áo Hoodie Xám",
-      size: "M",
-      color: "Xám",
-      price: 320000,
-      quantity: 1,
-      image: require("../assets/Sp2.jpg"),
-    },
-  },
-  {
-    id: 145,
-    status: "Đã giao",
-    product: {
-      name: "Áo Hoodie Đen",
-      size: "L",
-      color: "Đen",
-      price: 290000,
-      quantity: 1,
-      image: require("../assets/Sp1.jpg"),
-    },
-  },
-  {
-    id: 146,
-    status: "Đã hủy",
-    product: {
-      name: "Áo Hoodie Đen",
-      size: "L",
-      color: "Đen",
-      price: 290000,
-      quantity: 1,
-      image: require("../assets/Sp1.jpg"),
-    },
-  }
+// Map tiếng Việt sang enum backend
+const STATUS_TABS = [
+  { label: "Đang chờ", value: "Pending" },
+  { label: "Đang giao", value: "Processed" },
+  { label: "Đã giao", value: "Delivered" },
+  { label: "Đã hủy", value: "Cancelled" }
 ];
 
 const OrderHistory = () => {
   const [selectedTab, setSelectedTab] = useState("Đang chờ");
+  const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const filteredOrders = ordersData.filter(
-    (order) => order.status === selectedTab
+  const { orders, loading, error } = useSelector((state) => state.order);
+
+  const handleReBuy = (order)=> {
+    for (const item of order.products) {
+        dispatch(addToCart({
+          productId: item.productId._id,
+          quantity: item.quantity,
+          color: item.color,
+          size: item.size,
+        }));
+    }
+    navigation.navigate('Tabs', { screen: 'Car' });
+  }
+  // Chuyển tiếng Việt sang enum để gọi API
+  useEffect(() => {
+    const statusEnum = STATUS_TABS.find(tab => tab.label === selectedTab)?.value;
+    if (statusEnum) {
+      dispatch(getOrdersByStatus(statusEnum));
+    }
+  }, [selectedTab,dispatch]);
+
+  const handleViewDetail = (order) => {
+      navigation.navigate('Orderdetail',{order})
+  };
+  const handleCancelOrder = (orderId) => {
+    Alert.alert(
+      'Thông báo',
+      'Bạn có chắc chắn muốn hủy đơn hàng này không?',
+      [
+        {
+          text: 'Không',
+          style: 'cancel',
+        },
+        {
+          text: 'Có',
+          onPress: () => {
+            dispatch(cancelOrder(orderId))
+              .then((data) => {
+                console.log(data);
+                Alert.alert('Thông báo', data.payload.message);
+              })
+              .catch((error) => {
+                Alert.alert('Lỗi', error || 'Không thể hủy đơn hàng');
+              });
+          },
+          style: 'destructive',
+        },
+      ]
+    );
+  };
+
+  const renderStatusButtons = (order) => {
+    switch (selectedTab) {
+      case "Đang chờ":
+        return (
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.cancelButton} onPress={()=>{
+              handleCancelOrder(order._id)
+            }}>
+              <Text style={styles.cancelButtonText}>Hủy đặt</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.detailButton}
+              onPress={()=>{
+                handleViewDetail( order )
+              }}
+            >
+              <Text style={styles.detailButtonText}>Chi tiết</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case "Đang giao":
+        return (
+          <View style={styles.buttonsContainer}>
+            <View style={styles.txt}>
+              <Text style={styles.txtText}>Đơn hàng đang được giao đến bạn!</Text>
+            </View>
+          </View>
+        );
+      case "Đã giao":
+        return (
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={()=>{
+                handleReBuy(order)
+              }}
+            >
+              <Text style={styles.cancelButtonText}>Mua lại</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.detailButton}
+              onPress={()=>{
+                navigation.navigate('ProductReview',{order})
+              }}
+            >
+              <Text style={styles.detailButtonText}>Đánh giá</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      case "Đã hủy":
+        return (
+          <View style={styles.buttonsContainer}>
+            <View style={styles.txt2}>
+              <Text style={styles.txtText}>Đơn hàng đã được huỷ!</Text>
+            </View>
+          </View>
+        );
+    }
+  };
+
+  const renderOrderItem = ({ item }) => (
+    <View key={item._id} style={styles.orderCard}>
+      <Text style={styles.orderId}>#{item._id}</Text>
+      <View style={styles.orderInfo}>
+        {/* Duyệt qua mảng các sản phẩm trong đơn hàng */}
+        {item.products.map((productItem, index) => (
+          <View key={index} style={styles.productDetails}>
+            <Image
+              source={{ uri: productItem?.images?.[0] }}  // Ensure the image URL exists
+              style={styles.productImage}
+            />
+            <View style={styles.productInfo}>
+              <Text style={styles.productName}>
+                {productItem.productId?.name_product || "Tên sản phẩm"} {/* Ensure name exists */}
+              </Text>
+              <Text style={styles.productMeta}>
+                Màu: {productItem.color}, Size: {productItem.size}
+              </Text>
+              <Text style={styles.productPrice}>
+                {productItem.price?.toLocaleString() || "0"}đ {/* Handle price correctly */}
+                X {productItem.quantity}
+              </Text>
+            </View>
+          </View>
+        ))}
+      </View>
+      <Text style={styles.productTotal}>
+        Thành tiền: <Text style={{ fontWeight: "bold", color: '#E53935' }}>
+        {item.totalAmount?.toLocaleString() || "0"}đ {/* Calculate total price */}
+      </Text>
+      </Text>
+      {renderStatusButtons(item)}
+    </View>
   );
 
 
@@ -98,111 +173,53 @@ const OrderHistory = () => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            source={require("../assets/iconback.png")}
-            style={styles.icon}
-          />
+          <Image source={require("../assets/iconback.png")} style={styles.icon} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Lịch sử mua hàng</Text>
       </View>
 
       {/* Tabs */}
       <View style={styles.tabsContainer}>
-        {["Đang chờ", "Đang giao", "Đã giao", "Đã hủy"].map((tab) => (
+        {STATUS_TABS.map((tab) => (
           <TouchableOpacity
-            key={tab}
-            style={[
-              styles.tabButton,
-              selectedTab === tab && styles.tabButtonActive,
-            ]}
-            onPress={() => setSelectedTab(tab)}
+            key={tab.value}
+            style={[styles.tabButton, selectedTab === tab.label && styles.tabButtonActive]}
+            onPress={() => setSelectedTab(tab.label)}
           >
-            <Text
-              style={[
-                styles.tabText,
-                selectedTab === tab && styles.tabTextActive,
-              ]}
-            >
-              {tab}
+            <Text style={[styles.tabText, selectedTab === tab.label && styles.tabTextActive]}>
+              {tab.label}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      {/* Danh sách đơn hàng */}
-      <ScrollView style={styles.orderList}>
-        {filteredOrders.length > 0 ? (
-          filteredOrders.map((order) => (
-            <View key={order.id} style={styles.orderCard}>
-              <Text style={styles.orderId}>#{order.id}</Text>
-              <View style={styles.orderInfo}>
-                <Image source={order.product.image} style={styles.productImage} />
-                <View style={styles.productDetails}>
-                  <Text style={styles.productName}>{order.product.name}</Text>
-                  <Text style={styles.productMeta}>
-                    Màu {order.product.color}, Size: {order.product.size}
-                  </Text>
-                  <Text style={styles.productPrice}>
-                    {order.product.price.toLocaleString()}đ
-                  </Text>
-                  <Text style={styles.productTotal}>
-                    Thành tiền: <Text style={{ fontWeight: "bold", color: '#E53935' }}>
-                      {(order.product.price * order.product.quantity).toLocaleString()}đ
-                    </Text>
-                  </Text>
-                </View>
-              </View>
-
-              {selectedTab === "Đang chờ" && (
-                <View style={styles.buttonsContainer}>
-                  <TouchableOpacity style={styles.cancelButton}>
-                    <Text style={styles.cancelButtonText}>Hủy đặt</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.detailButton} onPress={() => navigation.navigate('Orderdetail')}>
-                    <Text style={styles.detailButtonText}>Chi tiết</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              {selectedTab === "Đang giao" && (
-                <View style={styles.buttonsContainer}>
-                  <View style={styles.txt}>
-                    <Text style={styles.txtText}>Đơn hàng đang được giao đến bạn!</Text>
-                  </View>
-                </View>
-              )}
-              {selectedTab === "Đã giao" && (
-                <View style={styles.buttonsContainer}>
-                  <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate('Order')}>
-                    <Text style={styles.cancelButtonText}>Mua lại</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.detailButton} onPress={() => navigation.navigate('Evaluate')}>
-                    <Text style={styles.detailButtonText}>Đánh giá</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              {selectedTab === "Đã hủy" && (
-                <View style={styles.buttonsContainer}>
-                  <View style={styles.txt2}>
-                    <Text style={styles.txtText}>Đơn hàng đã được huỷ !</Text>
-                  </View>
-                </View>
-              )}
-            </View>
-          ))
-        ) : (
-          <Text style={styles.noOrderText}>Không có đơn hàng nào</Text>
-        )}
-      </ScrollView>
+      {/* Loading or Error */}
+      {loading ? (
+        <ActivityIndicator size="large" color="#000" style={{ marginTop: 20 }} />
+      ) : error ? (
+        <Text style={styles.noOrderText}>Đã xảy ra lỗi: {error}</Text>
+      ) : orders.length === 0 ? (
+        <Text style={styles.noOrderText}>Không có đơn hàng nào</Text>
+      ) : (
+        <FlatList
+          data={orders}
+          renderItem={renderOrderItem}
+          keyExtractor={(item) => item._id}
+          style={styles.orderList}
+        />
+      )}
     </View>
   );
 };
+
+export default OrderHistory;
 
 // Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 20
+    padding: 10
   },
   header: {
     flexDirection: "row",
@@ -259,8 +276,8 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   orderInfo: {
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: "column",
+    alignItems: "center",
   },
   productImage: {
     width: 80, height: 80,
@@ -268,7 +285,10 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   productDetails: {
-    flex: 1
+    flex: 1,
+    width: "100%",
+    flexDirection : 'row',
+    marginBottom : 10
   },
   productName: {
     fontSize: 16,
@@ -306,7 +326,7 @@ const styles = StyleSheet.create({
   txtText: {
     fontSize: 14,
     color: "gray",
-    left:10
+    left: 10
   },
   buttonsContainer: {
     flexDirection: "row",
@@ -340,10 +360,8 @@ const styles = StyleSheet.create({
   },
   noOrderText: {
     textAlign: "center",
-    arginTop: 20,
+    marginTop: 20,
     fontSize: 16,
     color: "gray"
   },
 });
-
-export default OrderHistory;

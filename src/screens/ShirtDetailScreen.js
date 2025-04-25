@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,22 +7,38 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback, FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../redux/action/cartAction';
+import api from '../services/api';
+import ProductImageSlider from '../component/productSlide';
 
 const ShirtDetailScreen = ({ route }) => {
   const { product } = route.params;
-  // console.log(product.product_name);
-  // In ra ID sản phẩm
-  console.log(product.id);
-
+  console.log(product);
+  useEffect(() => {
+    console.log(modalVisible)
+  }, [modalVisible])
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
 
+  const [reviews, setReviews] = useState([]);
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  useEffect(() => {
+    const getReviews = async () => {
+      const res = await api.get('review/getReview', {
+        params: {
+          productId: product._id,
+        }
+      })
+      setReviews(res.reviews);
+    }
+    getReviews();
+  }, [product._id])
   const getSizeDescription = (size) => {
     switch (size.toUpperCase()) {
       case 'S':
@@ -38,17 +54,36 @@ const ShirtDetailScreen = ({ route }) => {
     }
   };
 
+  const renderReview = ({ item }) => {
+    return (
+      <View style={styles.reviewContainer}>
+        <Image
+          source={{ uri: item?.userId?.avatar }}
+          style={styles.avatar}
+        />
+
+        <View style={{ flex: 1, marginLeft: 10 }}>
+          <Text style={styles.reviewerName}>
+            {item?.userId?.fullname || 'Người dùng ẩn danh'}
+          </Text>
+
+          <Text style={styles.reviewDate}>
+            {new Date(item?.createdAt).toLocaleString('vi-VN')}
+          </Text>
+
+          <Text style={styles.reviewText}>{item?.comment}</Text>
+        </View>
+
+        <Text style={styles.reviewRating}>⭐ {item?.rating}</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       {/* ScrollView để vuốt ảnh */}
       <ScrollView style={styles.scrollContainer}>
-        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}
-          style={styles.imageContainer}>
-          {product.images && product.images.length > 0 && product.images.map((image, index) => (
-            <Image key={index} source={{ uri: image }} style={styles.productImage} />
-          ))}
-
-        </ScrollView>
+        <ProductImageSlider images={product.images} />
 
         {/* <TouchableOpacity onPress={() => { }}>
           <Image
@@ -129,18 +164,16 @@ const ShirtDetailScreen = ({ route }) => {
             </TouchableOpacity>
           </View>
           {/* Đánh giá demo fix cứng */}
-          <View style={styles.reviewContainer}>
-            <Image source={require('../assets/Sp1.jpg')} style={styles.avatar} />
-            <View>
-              <Text style={styles.reviewerName}>Trịnh Văn Mạnh</Text>
-              <Text style={styles.reviewDate}>28/09/2024</Text>
-              <Text style={styles.reviewText}>Áo đẹp, đúng kích cỡ, sẽ mua lại lần tiếp theo.</Text>
-            </View>
-            <Text style={styles.reviewRating}>⭐ 5</Text>
-          </View>
+          <FlatList
+            data={reviews}
+            renderItem={renderReview}
+            keyExtractor={item => item._id}
+            nestedScrollEnabled
+            scrollEnabled={false} // không cuộn riêng FlatList
+          />
+
+
         </View>
-
-
       </ScrollView>
       {/* Footer */}
       <View style={styles.footer}>
@@ -244,7 +277,15 @@ const ShirtDetailScreen = ({ route }) => {
                 </ScrollView>
                 {/* Footer */}
                 <View style={styles.modalFooter}>
-                  <TouchableOpacity style={styles.cartButtonmodal} >
+                  <TouchableOpacity style={styles.cartButtonmodal} onPress={() => {
+                    dispatch(addToCart({
+                      productId: product._id,
+                      quantity: 1,
+                      size: selectedSize,
+                      color: selectedColor,
+                    }))
+                    setModalVisible(false);
+                  }} >
                     <Text style={styles.buttonText2}>Thêm vào giỏ hàng</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.buyButtonmodal} onPress={() => navigation.navigate('Order')}>
@@ -397,7 +438,6 @@ const styles = StyleSheet.create({
   },
   cartButton: {
     flex: 2,
-    alignItems: 'center',
     backgroundColor: '#ddd',
     padding: 10,
     borderRadius: 40,
@@ -412,7 +452,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 40,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   buttonText1: {
     color: '#808080',
@@ -519,7 +558,6 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginHorizontal: 5,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   buyButtonmodal: {
     flex: 2,
@@ -528,15 +566,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 40,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    height: 350,
-  },
-  productImage: {
-    width: 400,
-    height: 350,
-    resizeMode: "cover",
   },
   detailContainer: {
     padding: 16,
