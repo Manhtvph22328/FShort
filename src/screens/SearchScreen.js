@@ -81,7 +81,7 @@ export default function SearchScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Image source={require('../assets/Logo.png')} style={styles.headerLogo} />
-        <Text style={styles.headerTitle}>Men's Shop FShort</Text>
+        <Text style={styles.headerTitle}>Men's Shop FSport</Text>
       </View>
 
       {/* Search bar */}
