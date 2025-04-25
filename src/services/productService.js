@@ -2,20 +2,10 @@
 import api from "./api";
 
 
-const BASE_IMAGE_URL = 'http://192.168.1.19:5000';
-
-const fixProductImages = (product) => ({
-  ...product,
-  images: product.images.map(img =>
-    img.startsWith('http') ? img : `${BASE_IMAGE_URL}${img}`
-  )
-});
-
 export const getAllProducts = async () => {
   try {
     const response = await api.get('/products/listProducts');
-    const products = response.data;
-    return products.map(fixProductImages);
+    return response;
   } catch (error) {
     console.error('Lỗi khi lấy danh sách sản phẩm:', error);
     throw error;
@@ -25,8 +15,7 @@ export const getAllProducts = async () => {
 export const getProductsByCategory = async (categoryId) => {
   try {
     const response = await api.get(`/products/category/${categoryId}`);
-    const products = response.data;
-    return products.map(fixProductImages);
+    return response;
   } catch (error) {
     console.error("Lỗi khi lấy sản phẩm theo danh mục:", error);
     throw error;
@@ -41,7 +30,7 @@ export const searchProducts = async (keyword) => {
     const response = await api.get('/products/searchProducts', {
       params: { keyword: keyword.trim() } // Truyền keyword qua query params
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Lỗi khi tìm kiếm sản phẩm:', error);
     throw error;
