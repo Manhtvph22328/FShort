@@ -6,18 +6,20 @@ import {
   Modal,
   Image,
 } from 'react-native';
-import React, { useState } from 'react';
+
+import React, { useContext, useState } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 
 const ProfileScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
-
-  const handleLogout = () => {
-    setModalVisible(false);
-    console.log("User logged out!");
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
+  const { user, logout } = useContext(AuthContext);
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
@@ -41,8 +43,8 @@ const ProfileScreen = ({ navigation }) => {
             <Image source={require('../assets/brush.png')} style={styles.icon} />
           </TouchableOpacity>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>Trình Văn Mạnh</Text>
-            <Text style={styles.email}>manh@gmail.com</Text>
+            <Text style={styles.name}>{user?.fullname}</Text>
+            <Text style={styles.email}>{user?.email}</Text>
           </View>
         </View>
       </View>
