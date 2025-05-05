@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
         padding: 12,
         marginBottom: 12,
         alignItems: 'center',
-        elevation: 2, // nếu Android
         shadowColor: '#000', // nếu iOS
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
     ratingContainer: { flexDirection: 'row', alignItems: 'center', marginVertical: 5 },
     rating: { fontSize: 14, color: '#f1c40f' },
     price: { fontSize: 16, fontWeight: 'bold', color: '#ff5733' },
-    heartIcon: { position: 'absolute', top: 10, right: 10 },
+    heartIcon: { position: 'absolute', top: 70, right: 10 },
 });
 
 export default AllProduct;

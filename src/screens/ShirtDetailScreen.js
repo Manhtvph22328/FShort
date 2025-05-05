@@ -85,13 +85,6 @@ const ShirtDetailScreen = ({ route }) => {
       <ScrollView style={styles.scrollContainer}>
         <ProductImageSlider images={product.images} />
 
-        {/* <TouchableOpacity onPress={() => { }}>
-          <Image
-            source={require("../assets/favoriteOn.png")}
-            style={styles.iconFavo}
-          />
-        </TouchableOpacity> */}
-
         {/* Hiển thị thông tin sản phẩm */}
         <View style={styles.detailsContainer}>
           <View style={styles.infoContainer}>
@@ -159,9 +152,6 @@ const ShirtDetailScreen = ({ route }) => {
           <Text style={styles.sectionTitle}>Đánh giá</Text>
           <View style={styles.reviewRow}>
             <Text style={styles.rating}>⭐ {product.rating || 0}</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Evaluate')}>
-              <Text style={styles.viewAll}>Xem tất cả</Text>
-            </TouchableOpacity>
           </View>
           {/* Đánh giá demo fix cứng */}
           <FlatList

@@ -5,21 +5,42 @@ import {useDispatch, useSelector} from 'react-redux';
 import {cancelOrder, createOrder, payment} from '../redux/action/orderAction';
 import {orderSuccess} from '../redux/reducer/cartSlice';
 import generatePaymentCode from '../utils/genaratePaymentCode';
+import {getInformation} from '../redux/action/informationAction';
 
 const OrderScreen = ({navigation,route}) => {
     const [paymentMethod, setPaymentMethod] = useState("Cash On Delivery");
-    const [name, setName] = useState('Trình Văn Mạnh');
-    const [phoneNumber, setPhoneNumber] = useState('0355435100');
-    const [address, setAddress] = useState('80 Xuân Phương, Hoè Thị, Hà Nội');
+    const [name, setName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [address, setAddress] = useState('');
     const [newOrder, setNewOrder] = useState(null);
     const dispatch = useDispatch();
+    const {information} = useSelector((state) => state.information);
     const cartItems = route.params.cartItems;
 
     const totalAmount = cartItems.reduce((sum, item) => {
         return sum + item.price * item.quantity;
     }, 0);
 
+    useEffect(() => {
+        dispatch(getInformation())
+        console.log(information);
+    }, [dispatch]);
+
+    useEffect(() => {
+        information.forEach((item) => {
+            if (item.checked) {
+                setName(item.information.name);
+                setPhoneNumber(item.information.phoneNumber);
+                setAddress(item.information.address);
+            }
+        })
+    },[information])
+
     const handleCreateOrder = () => {
+        if (!address || !phoneNumber || !name) {
+            Alert.alert('Thông báo','Vui lòng cập nhập thông tin giao hàng');
+            return;
+        }
         dispatch(createOrder({
             shippingAddress: { address, phoneNumber, name },
             paymentMethod,
@@ -114,13 +135,26 @@ const OrderScreen = ({navigation,route}) => {
                       <Image source={require("../assets/oto.png")} style={styles.iconoto} />
                   </TouchableOpacity>
                   <Text style={styles.addressTitle}>Địa chỉ giao hàng</Text>
-                  <Text style={styles.editaddress}>Thay đổi</Text>
+                  <TouchableOpacity onPress={()=> {
+                      navigation.navigate('Information');
+                  }}>
+                      <Text style={styles.editaddress}>Thay đổi</Text>
+                  </TouchableOpacity>
               </View>
-              <View style={styles.tt2}>
-                  <Text style={styles.addressName}>{name}</Text>
-                  <Text style={styles.addressPhone}>{phoneNumber}</Text>
-                  <Text style={styles.addressDetail}>{address}</Text>
-              </View>
+              {
+                  information.length > 0 ?
+                    (
+                    <View style={styles.tt2}>
+                        <Text style={styles.addressName}>{name}</Text>
+                        <Text style={styles.addressPhone}>{phoneNumber}</Text>
+                        <Text style={styles.addressDetail}>{address}</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.tt2}>
+                        <Text style={styles.addressName}>Vui lòng cập nhập thông tin người dùng</Text>
+                    </View>
+                    )
+              }
           </View>
 
           <View style={styles.txt}>
@@ -245,9 +279,14 @@ const OrderScreen = ({navigation,route}) => {
                   </TouchableOpacity>
               </View>
             ) : (
-                <TouchableOpacity style={styles.orderButton} onPress={handleCreateOrder}>
+                <TouchableOpacity
+                  style={[styles.orderButton, information.length === 0 && { backgroundColor: '#a4a4a4' }]}
+                  onPress={handleCreateOrder}
+                  disabled={information.length === 0}
+                >
                     <Text style={styles.orderButtonText}>Đặt hàng</Text>
                 </TouchableOpacity>
+
               )
           }
       </ScrollView>
@@ -363,7 +402,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     productName: {
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: "bold"
     },
     productVariant: {

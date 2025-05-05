@@ -27,6 +27,7 @@ import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 import OrderDone from '../screens/orderDone';
 import ProductReview from '../screens/ProductCanReview';
 import Notification from '../screens/Notification';
+import InformationScreen from '../screens/InformationScreen';
 
 const Stack = createNativeStackNavigator();
 const linking = {
@@ -66,6 +67,7 @@ const AuthStackScreen = () => (
     <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} options={{ headerShown: false }} />
     <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Notification" component={Notification} options={{ headerShown: false }} />
+    <Stack.Screen name="Information" component={InformationScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 

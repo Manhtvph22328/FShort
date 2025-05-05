@@ -18,7 +18,7 @@ function OrderDone({navigation}) {
       <Text style={{color: '#737373', fontSize: 14, marginTop: 20, marginBottom: 10}}>Bạn sẽ nhận được thông tin cập
         nhận về sản phẩm trong hộp thư thông báo.</Text>
       <TouchableOpacity style={{
-        backgroundColor: '#ff7f00',
+        backgroundColor: '#000000',
         padding: 12,
         borderRadius: 40,
         alignItems: 'center',

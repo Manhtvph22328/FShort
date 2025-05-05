@@ -22,7 +22,6 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders.unshift(action.payload); // Thêm vào đầu mảng
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
