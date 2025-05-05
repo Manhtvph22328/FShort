@@ -18,8 +18,7 @@ const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
   const dispatch = useDispatch();

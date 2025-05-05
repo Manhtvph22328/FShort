@@ -28,19 +28,7 @@ export default function SearchScreen() {
         console.log('Đang gọi API tìm kiếm sản phẩm với query:', searchQuery);
         const result = await searchProducts(searchQuery);
         console.log('Kết quả API trả về:', result);
-
-        const mappedProducts = result.map(p => ({
-          id: p._id,
-          title: p.name_product,
-          price: `${p.price.toLocaleString()}₫`,
-          rating: p.rating,
-          description: p.description || 'Không có mô tả',
-          image: p.images && p.images[0] ? { uri: `http://10.0.3.2:5000${p.images[0]}` } : { uri: 'https://via.placeholder.com/150' },
-        }));
-
-        console.log('Sản phẩm đã được map:', mappedProducts);
-
-        setProducts(mappedProducts);
+        setProducts(result);
       } catch (error) {
         console.error('Lỗi khi tìm kiếm:', error);
         setProducts([]);
@@ -61,7 +49,7 @@ export default function SearchScreen() {
     const filterProducts = () => {
       const filtered = products.filter(product =>
         categories[selectedCategory](product) &&
-        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name_product.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredProducts(filtered);
     };
@@ -72,7 +60,7 @@ export default function SearchScreen() {
   const handleProductPress = (product) => {
     navigation.navigate('ShirtDetail', {product});
   };
-  
+
 
 
   return (
@@ -81,7 +69,7 @@ export default function SearchScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Image source={require('../assets/Logo.png')} style={styles.headerLogo} />
-        <Text style={styles.headerTitle}>Men's Shop FSport</Text>
+        <Text style={styles.headerTitle}>Men's Shop FShort</Text>
       </View>
 
       {/* Search bar */}
@@ -135,13 +123,13 @@ export default function SearchScreen() {
       ) : (
         <FlatList
           data={filteredProducts}
-          keyExtractor={item => String(item.id)}
+          keyExtractor={item => String(item._id)}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => handleProductPress(item)}>
               <View style={styles.productCard}>
-                <Image source={item.image} style={styles.productImage} />
+                <Image source={{ uri: item.images[0] }} style={styles.productImage} />
                 <View style={styles.productInfo}>
-                  <Text style={styles.productTitle}>{item.title}</Text>
+                  <Text style={styles.productTitle}>{item.name_product}</Text>
                   <Text numberOfLines={1} style={styles.productDescription}>
                     {item.description}
                   </Text>

@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // đổi từ userInfo -> user
 
   const login = async (username, password) => {
-    const res = await axios.post('http://192.168.1.19:5000/api/users/login', {
+    const res = await axios.post('http://192.168.1.8:5000/api/users/login', {
       username,
       password,
     });

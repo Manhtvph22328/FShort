@@ -182,12 +182,12 @@ const HomeScreen = () => {
                   <Text style={styles.gridTitle} numberOfLines={2} ellipsizeMode="tail">
                     {product.name_product}
                   </Text>
-                  <Text style={styles.gridPrice}>{product.price}₫</Text>
-                  <Text style={styles.gridSold}>Đã bán: {product.sold}</Text>
+                  <View style={styles.productHeader}>
+                    <Text style={styles.gridPrice}>{product.price}₫</Text>
+                    <Text style={styles.gridSold}>Đã bán: {product.sold}</Text>
+                  </View>
                 </View>
-                {product.rating ? (
-                  <Text style={styles.gridRating}>★ {product.rating}</Text>
-                ) : null}
+                
               </View>
 
             </View>
@@ -281,13 +281,12 @@ const styles = StyleSheet.create({
     marginRight: 20,
     borderRadius: 20,
     position: 'relative',
-    width: 250,
+    width: 220,
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8,
     marginBottom: 10,
     marginTop: 20,
     height: 'auto', // Đảm bảo chiều cao tự động theo nội dung
@@ -380,15 +379,21 @@ const styles = StyleSheet.create({
   cardSoldRight: {
     fontSize: 12,
     color: '#666',
+    top: 40
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     marginTop: 10,
-    marginBottom: 50, // Tăng marginBottom để tránh chồng lên phần dưới
+
   },
 
+  productHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 
   gridItem: {
     width: '48%',
@@ -405,12 +410,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 6, // Hiệu ứng bóng cho Android
   },
 
   gridImage: {
     width: '100%',
-    height: 150,
+    height: 160,
   },
 
   gridInfo: {
@@ -418,7 +422,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     padding: 8,
-    height: 100,
+    height: 80,
   },
 
   gridInfoLeft: {
@@ -447,7 +451,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#FFD700',
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: 180,
   },
 });
 
