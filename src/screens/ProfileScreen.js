@@ -60,7 +60,7 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.functionText}>Chỉnh sửa thông tin cá nhân</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.functionButton} onPress={() => navigation.navigate('EditAdress')}>
+          <TouchableOpacity style={styles.functionButton} onPress={() => navigation.navigate('Information')}>
             <Image source={require('../assets/adress.png')} style={styles.icon} />
             <Text style={styles.functionText}>Chỉnh sửa địa chỉ</Text>
           </TouchableOpacity>

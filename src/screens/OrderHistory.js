@@ -5,8 +5,8 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from "react-redux";
-import {cancelOrder, getOrdersByStatus} from '../redux/action/orderAction';
-import {addToCart} from '../redux/action/cartAction';
+import { cancelOrder, getOrdersByStatus } from '../redux/action/orderAction';
+import { addToCart } from '../redux/action/cartAction';
 
 // Map tiếng Việt sang enum backend
 const STATUS_TABS = [
@@ -23,14 +23,14 @@ const OrderHistory = () => {
 
   const { orders, loading, error } = useSelector((state) => state.order);
 
-  const handleReBuy = (order)=> {
+  const handleReBuy = (order) => {
     for (const item of order.products) {
-        dispatch(addToCart({
-          productId: item.productId._id,
-          quantity: item.quantity,
-          color: item.color,
-          size: item.size,
-        }));
+      dispatch(addToCart({
+        productId: item.productId._id,
+        quantity: item.quantity,
+        color: item.color,
+        size: item.size,
+      }));
     }
     navigation.navigate('Tabs', { screen: 'Car' });
   }
@@ -40,10 +40,10 @@ const OrderHistory = () => {
     if (statusEnum) {
       dispatch(getOrdersByStatus(statusEnum));
     }
-  }, [selectedTab,dispatch]);
+  }, [selectedTab, dispatch]);
 
   const handleViewDetail = (order) => {
-      navigation.navigate('Orderdetail',{order})
+    navigation.navigate('Orderdetail', { order })
   };
   const handleCancelOrder = (orderId) => {
     Alert.alert(
@@ -77,15 +77,15 @@ const OrderHistory = () => {
       case "Đang chờ":
         return (
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.cancelButton} onPress={()=>{
+            <TouchableOpacity style={styles.cancelButton} onPress={() => {
               handleCancelOrder(order._id)
             }}>
               <Text style={styles.cancelButtonText}>Hủy đặt</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.detailButton}
-              onPress={()=>{
-                handleViewDetail( order )
+              onPress={() => {
+                handleViewDetail(order)
               }}
             >
               <Text style={styles.detailButtonText}>Chi tiết</Text>
@@ -105,7 +105,7 @@ const OrderHistory = () => {
           <View style={styles.buttonsContainer}>
             <TouchableOpacity
               style={styles.cancelButton}
-              onPress={()=>{
+              onPress={() => {
                 handleReBuy(order)
               }}
             >
@@ -113,8 +113,8 @@ const OrderHistory = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.detailButton}
-              onPress={()=>{
-                navigation.navigate('ProductReview',{order})
+              onPress={() => {
+                navigation.navigate('ProductReview', { order })
               }}
             >
               <Text style={styles.detailButtonText}>Đánh giá</Text>
@@ -125,7 +125,13 @@ const OrderHistory = () => {
         return (
           <View style={styles.buttonsContainer}>
             <View style={styles.txt2}>
-              <Text style={styles.txtText}>Đơn hàng đã được huỷ!</Text>
+              {
+               order.status ===  'Cancelled' ? (
+                 <Text style={styles.cancelButtonText}>Đơn hàng đã được hủy</Text>
+               ) : (
+                 <Text style={styles.cancelButtonText}>Bạn đã từ chối nhận đơn hàng này</Text>
+               )
+              }
             </View>
           </View>
         );
@@ -140,7 +146,7 @@ const OrderHistory = () => {
         {item.products.map((productItem, index) => (
           <View key={index} style={styles.productDetails}>
             <Image
-              source={{ uri: productItem?.images?.[0] }}  // Ensure the image URL exists
+              source={{ uri: productItem?.productId?.images?.[0] }}  // Ensure the image URL exists
               style={styles.productImage}
             />
             <View style={styles.productInfo}>
@@ -160,8 +166,8 @@ const OrderHistory = () => {
       </View>
       <Text style={styles.productTotal}>
         Thành tiền: <Text style={{ fontWeight: "bold", color: '#E53935' }}>
-        {item.totalAmount?.toLocaleString() || "0"}đ {/* Calculate total price */}
-      </Text>
+          {item.totalAmount?.toLocaleString() || "0"}đ {/* Calculate total price */}
+        </Text>
       </Text>
       {renderStatusButtons(item)}
     </View>
@@ -287,8 +293,8 @@ const styles = StyleSheet.create({
   productDetails: {
     flex: 1,
     width: "100%",
-    flexDirection : 'row',
-    marginBottom : 10
+    flexDirection: 'row',
+    marginBottom: 10
   },
   productName: {
     fontSize: 16,

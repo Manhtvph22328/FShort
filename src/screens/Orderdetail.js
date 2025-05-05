@@ -5,6 +5,7 @@ import {
     Image,
     TouchableOpacity,
     StyleSheet,
+    ScrollView,
     Alert, Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -86,7 +87,7 @@ const Orderdetail = ({ route, navigation }) => {
                   <Text style={styles.headerText}>Chi Tiết Đơn Hàng</Text>
               </View>
           </View>
-
+<ScrollView style={styles.scrollContainer}>
           {/* Address */}
           <View style={styles.addressContainer}>
               <View style={styles.tt}>
@@ -162,45 +163,18 @@ const Orderdetail = ({ route, navigation }) => {
               ))}
           </View>
 
-
-
-
-          <View style={{position : 'absolute',bottom : 50,padding : 10,width : '100%'}}>
+          <View style={{bottom : 20,padding : 10,width : '100%'}}>
               {/* Button hủy đơn nếu đang chờ xử lý */}
               {
                   order.status === 'Pending' && order.paymentMethod === 'Cash On Delivery' ? (
                     <TouchableOpacity style={styles.orderButton} onPress={handleCancelOrder}>
                         <Text style={styles.orderButtonText}>Huỷ đơn hàng</Text>
                     </TouchableOpacity>
-                  ) : order.paymentStatus === 'Unpaid' && order.paymentMethod === 'Momo' ? (
-                    <View style={{
-                        flexDirection: "row",
-                        justifyContent : 'space-between',
-                        height : 50,
-                        gap : 10
-                    }}>
-                        <TouchableOpacity
-                          style={{width : '50%',
-                              backgroundColor : 'gray',
-                              borderRadius : 8,alignItems : 'center',
-                              justifyContent :'center'}}
-                          onPress={handleCancelOrder}
-                        >
-                            <Text style={styles.orderButtonText}>Hủy</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={processOnlinePayment}
-                          style={{width : '50%',
-                              backgroundColor : 'blue',
-                              borderRadius : 8,alignItems : 'center',
-                              justifyContent :'center'}}>
-                            <Text style={styles.orderButtonText}>Thanh toán</Text>
-                        </TouchableOpacity>
-                    </View>
+                
                   ) : null
               }
           </View>
-
+          </ScrollView>
       </View>
     );
 };
@@ -216,6 +190,9 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         paddingVertical: 10,
     },
+    scrollContainer: {
+        paddingBottom: 80,
+      },
     headerText: { fontSize: 20, fontWeight: 'bold', color: 'black' },
     tt: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
     tt2: { flexDirection: 'column', left: 28 },
