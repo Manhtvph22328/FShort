@@ -167,7 +167,7 @@ const ShirtDetailScreen = ({ route }) => {
       </ScrollView>
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.chatButton}>
+        <TouchableOpacity style={styles.chatButton} onPress={() => navigation.navigate('Chat')}>
           <Image source={require('../assets/chat.png')} style={styles.icon2} />
           <Text style={styles.buttonText1}>Chat</Text>
         </TouchableOpacity>
