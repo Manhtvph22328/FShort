@@ -342,7 +342,13 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
-
+  productHeader: {
+    // top: -100,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 10
+  },
   productText: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -378,6 +384,7 @@ const styles = StyleSheet.create({
   },
   cardSoldRight: {
     fontSize: 12,
+    top:43,
     color: '#666',
     top: 40
   },
