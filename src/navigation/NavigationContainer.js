@@ -17,7 +17,6 @@ import AllProduct from '../screens/AllProduct';
 import Favorite from '../screens/Favorite';
 import OrderScreen from '../screens/OrderScreen';
 import EditProfileScreen from '../screens/EditProfile';
-import EditdressScreen from '../screens/EditAdress';
 import OrderHistory from '../screens/OrderHistory';
 import Orderdetail from '../screens/Orderdetail';
 import Evaluate from '../screens/Evaluate';
@@ -28,6 +27,7 @@ import OrderDone from '../screens/orderDone';
 import ProductReview from '../screens/ProductCanReview';
 import Notification from '../screens/Notification';
 import InformationScreen from '../screens/InformationScreen';
+import ChatScreen from '../screens/Chat';
 
 const Stack = createNativeStackNavigator();
 const linking = {
@@ -59,7 +59,6 @@ const AuthStackScreen = () => (
     <Stack.Screen name="OrderHistory" component={OrderHistory} options={{ headerShown: false }} />
     <Stack.Screen name="OrderDone" component={OrderDone} options={{ headerShown: false }} />
     <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="EditAdress" component={EditdressScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Orderdetail" component={Orderdetail} options={{ headerShown: false }} />
     <Stack.Screen name="Evaluate" component={Evaluate} options={{ headerShown: false }} />
     <Stack.Screen name="ProductReview" component={ProductReview} options={{ headerShown: false }} />
@@ -68,6 +67,7 @@ const AuthStackScreen = () => (
     <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Notification" component={Notification} options={{ headerShown: false }} />
     <Stack.Screen name="Information" component={InformationScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 

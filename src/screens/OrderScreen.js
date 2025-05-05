@@ -407,12 +407,12 @@ const styles = StyleSheet.create({
     },
     productVariant: {
         color: "gray",
-        top: 20,
+        top: 10,
     },
     productPrice: {
         color: "red",
         fontWeight: "bold",
-        top: 25,
+        top: 10,
         fontSize: 17,
     },
     quaty: {
