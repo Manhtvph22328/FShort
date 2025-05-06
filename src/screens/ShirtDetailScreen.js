@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
+
 import {
   View,
   Text,
@@ -14,9 +16,12 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/action/cartAction';
 import api from '../services/api';
 import ProductImageSlider from '../component/productSlide';
+import { addToWishlist } from '../redux/action/wishlistAction';
+
 
 const ShirtDetailScreen = ({ route }) => {
   const { product } = route.params;
+
   console.log(product);
   useEffect(() => {
     console.log(modalVisible)
@@ -28,6 +33,30 @@ const ShirtDetailScreen = ({ route }) => {
   const [reviews, setReviews] = useState([]);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  // add list yêu thích
+  const handleAddToWishlist = async () => {
+    console.log('Trạng thái is_active list yêu thích:', product.is_active);
+    if (product.is_active === false) {
+      Alert.alert('Thông báo', 'Sản phẩm đã ngừng bán, không thể thêm vào danh sách yêu thích.');
+      return;
+    }
+    try {
+      const resultAction = await dispatch(addToWishlist(product._id));
+      console.log('Kết quả dispatch:', resultAction);
+
+      if (resultAction.meta && resultAction.meta.requestStatus === 'fulfilled') {
+        Alert.alert('Thành công', 'Đã thêm vào danh sách yêu thích');
+      } else {
+        Alert.alert('Thất bại', resultAction.payload || 'Không thể thêm vào danh sách yêu thích');
+      }
+    } catch (error) {
+      console.error('Lỗi khi thêm vào wishlist:', error);
+      Alert.alert('Lỗi', 'Đã xảy ra lỗi khi thêm vào danh sách yêu thích');
+    }
+  };
+
+
   useEffect(() => {
     const getReviews = async () => {
       const res = await api.get('review/getReview', {
@@ -92,17 +121,23 @@ const ShirtDetailScreen = ({ route }) => {
               <Text style={styles.price}>
                 {product.price.toLocaleString('vi-VN')}₫
               </Text>
-              <TouchableOpacity onPress={() => { }}>
+              <TouchableOpacity onPress={handleAddToWishlist}>
                 <Image
                   source={require("../assets/favoriteOn.png")}
                   style={styles.iconFavoInline}
                 />
               </TouchableOpacity>
+
             </View>
 
             <Text style={styles.productName}>
               {product.name_product ? product.name_product : 'Sản phẩm không có tên'}
             </Text>
+            {product.is_active === false && (
+              <Text style={{ color: 'red', fontWeight: 'bold' }}>
+                Sản phẩm đã ngừng bán
+              </Text>
+            )}
 
             <Text style={styles.sold}>
               Đã bán: {product.sold || 0}
@@ -167,13 +202,27 @@ const ShirtDetailScreen = ({ route }) => {
       </ScrollView>
       {/* Footer */}
       <View style={styles.footer}>
+
         <TouchableOpacity style={styles.chatButton} onPress={() => navigation.navigate('Chat')}>
           <Image source={require('../assets/chat.png')} style={styles.icon2} />
           <Text style={styles.buttonText1}>Chat</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.cartButton} onPress={() => setModalVisible(true)}>
+
+        <TouchableOpacity
+          style={styles.cartButton}
+          onPress={() => {
+            console.log('Trạng thái is_active giỏ hàng:', product.is_active);
+
+            if (product.is_active === false || product.is_active === 'false') {
+              Alert.alert('Thông báo', 'Sản phẩm đã ngừng bán và không thể thêm vào giỏ hàng.');
+            } else {
+              setModalVisible(true);
+            }
+          }}
+        >
           <Text style={styles.buttonText2}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.buyButton} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText3}>Mua ngay</Text>
         </TouchableOpacity>

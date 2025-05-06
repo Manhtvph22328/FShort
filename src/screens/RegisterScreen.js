@@ -28,7 +28,7 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     try {
-      const response = await axios.post('http://192.168.11.19:5000/api/users/register', {
+      const response = await axios.post('https://33cc-2401-d800-7c20-7ae4-5510-2822-5d34-a40c.ngrok-free.app/api/users/register', {
         username,
         fullname,
         email,
