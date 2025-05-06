@@ -45,8 +45,9 @@ export const addToWishlist = createAsyncThunk('wishlist/addToWishlist', async (p
         const response = await api.post(`/wishlist/addToWishlist/${productId}`);
         const wishlist = response.wishlist;
 
-        if (Array.isArray(wishlist)) {
-            return wishlist; // Trả về danh sách yêu thích mới
+        // Kiểm tra xem wishlist có chứa mảng products không
+        if (Array.isArray(wishlist?.products)) {
+            return wishlist; // Trả về wishlist hợp lệ
         } else {
             throw new Error('Dữ liệu wishlist không hợp lệ');
         }
@@ -54,6 +55,7 @@ export const addToWishlist = createAsyncThunk('wishlist/addToWishlist', async (p
         return thunkAPI.rejectWithValue(error.message || 'Lỗi thêm wishlist');
     }
 });
+
 
 
 // DELETE FROM WISHLIST

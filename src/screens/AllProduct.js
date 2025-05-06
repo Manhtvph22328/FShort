@@ -51,11 +51,14 @@ const AllProduct = () => {
 
                             <View style={styles.info}>
                                 <Text style={styles.name}>{product.name_product || "Tên sản phẩm"}</Text>
+                                <Text>
+                                ⭐
                                 {product.rating && (
                                     <View style={styles.ratingContainer}>
-                                        <Text style={styles.rating}>⭐ {product.rating}</Text>
+                                        <Text style={styles.rating}>{product.rating}</Text>
                                     </View>
                                 )}
+                                </Text>
                                 <Text style={styles.price}>{product.price.toLocaleString()}₫</Text>
                             </View>
                             <TouchableOpacity style={styles.heartIcon}>
@@ -116,10 +119,10 @@ const styles = StyleSheet.create({
     },
 
     info: { flex: 1, marginLeft: 20 },
-    name: { fontSize: 18, fontWeight: 'bold' },
+    name: { fontSize: 15, fontWeight: 'bold' },
     ratingContainer: { flexDirection: 'row', alignItems: 'center', marginVertical: 5 },
-    rating: { fontSize: 14, color: '#f1c40f' },
-    price: { fontSize: 16, fontWeight: 'bold', color: '#ff5733' },
+    rating: { fontSize: 14, color: '#000000', left:5, top:2 },
+    price: { fontSize: 14, fontWeight: 'bold', color: '#ff5733' },
     heartIcon: { position: 'absolute', top: 70, right: 10 },
 });
 

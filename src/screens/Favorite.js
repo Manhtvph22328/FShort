@@ -1,82 +1,47 @@
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, Modal, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getWishlist, removeFromWishlist, addToWishlist } from '../redux/action/wishlistAction';  // Thêm addToWishlist
 import { useNavigation } from '@react-navigation/native';
-
-const productsfavo = [
-    {
-        id: 1,
-        title: 'Áo Hoodie',
-        price: '300.000₫',
-        rating: 3.5,
-        quantity: 99,
-        image: require('../assets/Sp1.jpg'),
-        description: 'Chất liệu vải dày dặn.',
-        description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
-        description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
-        description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
-        description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
-    },
-    {
-        id: 2,
-        title: 'Áo Hoodie Xám',
-        price: '320.000₫',
-        rating: 4.0,
-        quantity: 99,
-        image: require('../assets/Sp2.jpg'),
-        description: 'Thoải mái, phong cách.',
-        description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
-        description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
-        description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
-        description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
-    },
-    {
-        id: 3,
-        title: 'Áo Hoodie Đen',
-        price: '290.000₫',
-        rating: 4.2,
-        quantity: 99,
-        image: require('../assets/Sp3.jpg'),
-        description: 'Mềm mại, giữ ấm tốt.',
-        description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
-        description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
-        description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
-        description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
-    },
-    {
-        id: 4,
-        title: 'Áo Hoodie Trắng',
-        price: '350.000₫',
-        rating: 4.6,
-        quantity: 99,
-        image: require('../assets/Sp2.jpg'),
-        description: 'Đẹp và phong cách.',
-        description2: 'Áo hoodie, áo khoác nam nữ chất nỉ dày form rộng có mũ giá rẻ, luôn luôn cập nhật những mẫu mã sản phẩm mơi, đa dạng phù hợp với các bạn trẻ, hứa hẹn luôn đem lại cho bạn những sản phẩm thời trang ưng ý và hoàn hảo nhất.',
-        description3: 'Chất liệu: Nỉ cào bông, vải dày dặn, mềm, mịn, mặc thoáng mát, đường chỉ may chắc chắm, không bị giãn,...',
-        description4: 'Công nghệ sử dụng: Sử dụng máy in pet chất lượng cao nhất để đảm bảo sản phẩm luôn rõ nét',
-        description5: 'Ưu điểm: Màu sắc, hình ảnh in lên áo cam kết đẹp và sắc nét hơn so với hình mẫu',
-    },
-];
 
 const Favorite = () => {
     const navigation = useNavigation();
-    const [favoriteProducts, setFavoriteProducts] = useState(productsfavo);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
+    const dispatch = useDispatch();
+    const { items: favoriteProducts, loading, error } = useSelector((state) => state.wishlist);
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [selectedProduct, setSelectedProduct] = React.useState(null);
 
-    // Hiển thị modal xác nhận
+    useEffect(() => {
+        dispatch(getWishlist());
+    }, [dispatch]);
+
+    // Hàm xử lý thêm/xóa sản phẩm khỏi danh sách yêu thích
+
+    const handleToggleFavorite = (product) => {
+        const isFavorite = favoriteProducts.some(item => item._id === product._id);
+        // Kiểm tra nếu sản phẩm đã có trong danh sách yêu thích
+        if (isFavorite) {
+            dispatch(removeFromWishlist(product._id));
+            // Xóa khỏi danh sách yêu thích
+        } else {
+            dispatch(addToWishlist(product));
+        }
+    };
+
+
     const handleShowModal = (product) => {
         setSelectedProduct(product);
         setModalVisible(true);
     };
 
-    // Xoá sản phẩm khỏi danh sách
+
     const handleRemoveFavorite = () => {
         if (selectedProduct) {
-            const updatedFavorites = favoriteProducts.filter(
-                (item) => item.id !== selectedProduct.id
-            );
-            setFavoriteProducts(updatedFavorites);
+            // console.log("Xóa sản phẩm:", selectedProduct._id);
+            handleToggleFavorite(selectedProduct); // gọi lại toggle để xoá
             setModalVisible(false);
+        } else {
+            console.log("Không có sản phẩm để xóa.");
         }
     };
 
@@ -84,42 +49,57 @@ const Favorite = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image
-                        source={require('../assets/iconback.png')}
-                        style={styles.icon}
-                    />
+                    <Image source={require('../assets/iconback.png')} style={styles.icon} />
                 </TouchableOpacity>
-                <View style={styles.headerTextContainer}>
-                    <Text style={styles.headerText}>Danh sách yêu thích</Text>
-                </View>
+                <Text style={styles.headerText}>Danh sách yêu thích</Text>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {productsfavo.map((product) => (
-                    <TouchableOpacity
-                        key={product.id}
-                        onPress={() => navigation.navigate('ShirtDetail', { product })}
-                    >
-                        <View key={product.id} style={styles.card}>
-                            <Image source={product.image} style={styles.image} />
-                            <View style={styles.info}>
-                                <Text style={styles.name}>{product.title}</Text>
-                                <Text style={styles.rating}>{product.description}</Text>
-                                <View style={styles.ratingContainer}>
-                                    <Text style={styles.rating}>⭐ {product.rating}</Text>
-                                </View>
-                                <Text style={styles.price}>{product.price} / cái</Text>
-                            </View>
-                            <TouchableOpacity style={styles.heartIcon}
-                                onPress={() => handleShowModal(product)}>
-                                <Image source={require('../assets/favoriteOn.png')} style={styles.icon} />
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
+            {loading ? (
+                <Text>Đang tải...</Text>
+            ) : error ? (
+                <Text>{error}</Text>
+            ) : (
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    {favoriteProducts.length === 0 ? (
+                        <Text style={styles.emptyText}>Chưa có sản phẩm yêu thích.</Text>
+                    ) : (
+                        favoriteProducts && favoriteProducts.map((product) => (
+                            <TouchableOpacity
+                                key={product._id}
+                                onPress={() => navigation.navigate('ShirtDetail', { product })}
+                            >
+                                <View style={styles.card}>
+                                    <Image
+                                        source={{ uri: product.images?.[0] }}
+                                        style={styles.image}
+                                    />
+                                    <View style={styles.info}>
+                                        <Text style={styles.name}>{product.name_product}</Text>
+                                        <Text style={styles.price}>
+                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)} / cái
+                                        </Text>
 
-            {/* Modal Xác Nhận Xoá */}
+                                    </View>
+                                    {/* Icon trái tim */}
+                                    <TouchableOpacity
+                                        style={styles.heartIcon}
+                                        onPress={() => handleToggleFavorite(product)}
+                                    >
+                                        <Image
+                                            source={favoriteProducts.some(item => item._id === product._id)
+                                                ? require('../assets/favoriteOnRed.png')
+                                                : require('../assets/favorite.png')}
+                                            style={styles.icon}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                    )}
+                </ScrollView>
+            )}
+
+            {/* Modal xác nhận xóa sản phẩm yêu thích */}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -132,173 +112,139 @@ const Favorite = () => {
 
                         {selectedProduct && (
                             <View style={styles.modalProduct}>
-                                <Image source={selectedProduct.image} style={styles.modalImage} />
-                                <View style={styles.modalInfo}>
-                                    <Text style={styles.modalProductName}>{selectedProduct.title}</Text>
-                                    <Text style={styles.modalProductPrice}>{selectedProduct.description}</Text>
-                                    <Text style={styles.modalProductPrice}>{selectedProduct.price}</Text>
-                                </View>
+                                <Image source={{ uri: selectedProduct.image }} style={styles.modalImage} />
+                                <Text style={styles.modalProductName}>{selectedProduct.title}</Text>
+                                <Text style={styles.modalProductPrice}>{selectedProduct.price}</Text>
                             </View>
                         )}
 
+                        {/* Xác nhận xoá */}
                         <TouchableOpacity style={styles.confirmButton} onPress={handleRemoveFavorite}>
                             <Text style={styles.confirmText}>Đồng ý</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+                        {/* Hủy bỏ */}
+                        <TouchableOpacity
+                            style={styles.cancelButton}
+                            onPress={() => setModalVisible(false)}
+                        >
                             <Text style={styles.cancelText}>Huỷ</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
-
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff', padding: 10 },
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#fff',
+    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        marginBottom: 20,
     },
     icon: {
-        width: 25,
-        height: 25,
-        marginLeft: 5,
-    },
-    headerTextContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        marginLeft: 15,
-        paddingVertical: 10,
+        width: 24,
+        height: 24,
     },
     headerText: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'black',
-        marginBottom: 5,
-        top: 1,
+        marginLeft: 10,
     },
     card: {
         flexDirection: 'row',
-        backgroundColor: '#EEEEEE',
-        borderRadius: 10,
-        padding: 20,
-        marginBottom: 10,
-        alignItems: 'center',
-        position: 'relative',
+        marginBottom: 16,
+        padding: 12,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 8,
     },
     image: {
-        width: 100,
-        height: 100,
-        borderRadius: 10
+        width: 80,
+        height: 80,
+        resizeMode: 'cover',
+        marginRight: 12,
     },
     info: {
         flex: 1,
-        marginLeft: 20
+        justifyContent: 'center',
     },
     name: {
-        fontSize: 18,
-        fontWeight: 'bold'
-    },
-    ratingContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 5
-    },
-    rating: {
-        fontSize: 14
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     price: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'black'
+        fontSize: 14,
+        color: '#888',
     },
     heartIcon: {
-        position: 'absolute',
-        top: 10, right: 10
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-
-    // Modal
+    emptyText: {
+        textAlign: 'center',
+        marginTop: 20,
+        fontSize: 16,
+        color: '#888',
+    },
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContainer: {
-        backgroundColor: "white",
-        width: "100%", height: "50%",
-        tSize: 18,
-        fontWeight: "bold",
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        paddingHorizontal: 16,
-        paddingTop: 16,
-        alignItems: "center",
-        paddingBottom: 24,
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        width: 300,
     },
     modalTitle: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: 'bold',
-        marginTop: 15,
-        textAlign: 'center'
+        marginBottom: 12,
     },
     modalProduct: {
-        flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 25,
-        marginLeft:10,
+        marginBottom: 12,
     },
     modalImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 10,
-        marginRight: 10
-    },
-    modalInfo: {
-        flex: 1
+        width: 80,
+        height: 80,
+        resizeMode: 'cover',
+        marginBottom: 8,
     },
     modalProductName: {
-        fontSize: 20,
-        top: -5,
-        fontWeight: 'bold'
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     modalProductPrice: {
-        fontSize: 16,
-        marginTop:7,
-        color: 'gray'
+        fontSize: 14,
+        color: '#888',
     },
     confirmButton: {
-        backgroundColor: "black",
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        borderRadius: 30,
-        width: "80%",
-        alignItems: "center",
-        marginBottom: 15,
-        marginTop: 80
+        backgroundColor: '#4CAF50',
+        padding: 10,
+        borderRadius: 8,
+        marginBottom: 10,
     },
     confirmText: {
-        color: "#ffffff",
-        fontSize: 18,
+        color: '#fff',
         fontWeight: 'bold',
     },
     cancelButton: {
-        backgroundColor: "#E0E0E0",
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        borderRadius: 30,
-        width: "80%",
-        alignItems: "center",
-        marginBottom: 10
+        backgroundColor: '#F44336',
+        padding: 10,
+        borderRadius: 8,
     },
     cancelText: {
-        color: "black",
-        fontSize: 18,
+        color: '#fff',
         fontWeight: 'bold',
     },
 });

@@ -15,21 +15,23 @@ const wishlistSlice = createSlice({
         builder
             .addCase(getWishlist.pending, (state) => {
                 state.loading = true;
+                state.error = null;
             })
             .addCase(getWishlist.fulfilled, (state, action) => {
                 state.loading = false;
-                state.items = action.payload;
+                state.items = action.payload; // Expecting an array
             })
-            .addCase(getWishlist.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            })
+
             .addCase(addToWishlist.fulfilled, (state, action) => {
-                state.items = action.payload;
+                state.wishlist = action.payload; // Cập nhật wishlist
+            })
+            .addCase(addToWishlist.rejected, (state, action) => {
+                state.error = action.payload; // Cập nhật lỗi nếu có
             })
             .addCase(removeFromWishlist.fulfilled, (state, action) => {
-                state.items = state.items.filter(item => item._id !== action.payload);
+                state.items = action.payload; // Expecting wishlist.products
             })
+
 
     },
 });
